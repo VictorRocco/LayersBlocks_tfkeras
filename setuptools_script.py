@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="LayersBlocks",
-    version="0.1.1",
+    version="0.1.2",
     description="Layers / Blocks for TensorFlow / Keras",
     long_description=long_description,
     long_description_content_type="text/markdown",

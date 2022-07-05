@@ -10,14 +10,14 @@ from tensorflow_addons.layers import InstanceNormalization
 @tf.keras.utils.register_keras_serializable()
 class FullPreActivation(tf.keras.layers.Layer):
 
-	def __init__(self, num_out_filters, name_prefix,
+	def __init__(self, num_out_filters,
 				 kernel_size=(3, 3), strides=(1, 1), dilation_rate=(1, 1),
 				 padding="same", activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
 				 normalization="IN", #IN=InstanceNormalization, BN=BatchNormalization, None
 				 l2_value=0.001, **kwargs):
         			
 		super().__init__(**kwargs)
-		self.set_config(num_out_filters, name_prefix,
+		self.set_config(num_out_filters,
 						kernel_size, strides, dilation_rate,
 						padding, activation,
 						normalization, l2_value)
@@ -25,23 +25,21 @@ class FullPreActivation(tf.keras.layers.Layer):
 		if normalization == "IN":
 			self.f_normalization = InstanceNormalization(axis=-1, center=True, scale=True,
 														 beta_initializer="random_uniform",
-														 gamma_initializer="random_uniform",
-														 name=name_prefix+"--FPA_INSTNORM")
+														 gamma_initializer="random_uniform")
 		elif normalization == "BN":
-			self.f_normalization = BatchNormalization(name=name_prefix+"--FPA_BN")
+			self.f_normalization = BatchNormalization()
 		else:
 			self.f_normalization == None
 
 		if activation == "LR010":
-			self.f_activation = LeakyReLU(0.10, name=name_prefix+"--FPA_LEAKYRELU")
+			self.f_activation = LeakyReLU(0.10)
 		elif activation == "RELU":
-			self.f_activation = ReLU(name=name_prefix+"--FPA_RELU")
+			self.f_activation = ReLU()
 		else:
 			self.f_activation = None
 
 		self.f_conv2d = Conv2D(num_out_filters, kernel_size=kernel_size, strides=strides, dilation_rate=dilation_rate,
-							   padding=padding, kernel_regularizer=l2(l2_value), bias_regularizer=l2(l2_value),
-							   name=name_prefix+"--FPA_CONV2D")
+							   padding=padding, kernel_regularizer=l2(l2_value), bias_regularizer=l2(l2_value))
 
 	def call(self, X):
 	
@@ -59,14 +57,13 @@ class FullPreActivation(tf.keras.layers.Layer):
 		
 		return Y
 
-	def set_config(self, num_out_filters, name_prefix,
+	def set_config(self, num_out_filters,
 				   kernel_size=(3, 3), strides=(1, 1), dilation_rate=(1, 1),
 				   padding="same", activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
-				   normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
+				   normalization="IN", # IN=InstanceNormalization, BN=BatchNormalization, None
 				   l2_value=0.001, **kwargs):
 
 		self.num_out_filters = num_out_filters
-		self.name_prefix = name_prefix
 		self.kernel_size = kernel_size
 		self.strides = strides
 		self.dilation_rate = dilation_rate
@@ -79,7 +76,6 @@ class FullPreActivation(tf.keras.layers.Layer):
 
 		config = super().get_config()
 		config["num_out_filters"] = self.num_out_filters
-		config["name_prefix"] = self.name_prefix
 		config["kernel_size"] = self.kernel_size
 		config["strides"] = self.strides
 		config["dilation_rate"] = self.dilation_rate
