@@ -1,4 +1,4 @@
-# Full Pre Activation sequence (Normalization) + Activation + Conv2d
+# Full Pre Activation sequence: (Normalization) + (Activation) + Conv2d
 # https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
 
 import tensorflow as tf
@@ -12,15 +12,15 @@ class FullPreActivation(tf.keras.layers.Layer):
 
 	def __init__(self, num_out_filters, name_prefix,
 				 kernel_size=(3, 3), strides=(1, 1), dilation_rate=(1, 1),
-				 padding="same", activation=LeakyReLU(0.10),
+				 padding="same", activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
 				 normalization="IN", #IN=InstanceNormalization, BN=BatchNormalization, None
 				 l2_value=0.001, **kwargs):
         			
 		super().__init__(**kwargs)
 		self.set_config(num_out_filters, name_prefix,
-				   kernel_size=(3, 3), strides=(1, 1), dilation_rate=(1, 1),
-				   padding="same", activation=LeakyReLU(0.10),
-				   normalization="IN", l2_value=0.001)
+						kernel_size, strides, dilation_rate,
+						padding, activation,
+						normalization, l2_value)
 
 		if normalization == "IN":
 			self.f_normalization = InstanceNormalization(axis=-1, center=True, scale=True,
@@ -30,9 +30,14 @@ class FullPreActivation(tf.keras.layers.Layer):
 		elif normalization == "BN":
 			self.f_normalization = BatchNormalization(name=name_prefix+"--FPA_BN")
 		else:
-			self.normalization == None
+			self.f_normalization == None
 
-		self.f_activation = activation
+		if activation == "LR010":
+			self.f_activation = LeakyReLU(0.10, name=name_prefix+"--FPA_LEAKYRELU")
+		elif activation == "RELU":
+			self.f_activation = ReLU(name=name_prefix+"--FPA_RELU")
+		else:
+			self.f_activation = None
 
 		self.f_conv2d = Conv2D(num_out_filters, kernel_size=kernel_size, strides=strides, dilation_rate=dilation_rate,
 							   padding=padding, kernel_regularizer=l2(l2_value), bias_regularizer=l2(l2_value),
@@ -44,8 +49,11 @@ class FullPreActivation(tf.keras.layers.Layer):
 			Y = self.f_normalization(X)
 		else:
 			Y = X
-			
-		Y = self.f_activation(Y)
+
+		if self.f_activation != None:
+			Y = self.f_activation(Y)
+		else:
+			Y = X
 
 		Y = self.f_conv2d(Y)
 		
@@ -53,9 +61,9 @@ class FullPreActivation(tf.keras.layers.Layer):
 
 	def set_config(self, num_out_filters, name_prefix,
 				   kernel_size=(3, 3), strides=(1, 1), dilation_rate=(1, 1),
-				   padding="same", activation=LeakyReLU(0.10),
+				   padding="same", activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
 				   normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-				   l2_value=0.001):
+				   l2_value=0.001, **kwargs):
 
 		self.num_out_filters = num_out_filters
 		self.name_prefix = name_prefix
