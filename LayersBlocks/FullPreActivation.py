@@ -66,11 +66,12 @@ class FullPreActivation(tf.keras.layers.Layer):
 
 		config = super().get_config()
 		config["num_out_filters"] = self.num_out_filters
+		config["name_prefix"] = self.name_prefix
 		config["kernel_size"] = self.kernel_size
 		config["strides"] = self.strides
 		config["dilation_rate"] = self.dilation_rate
 		config["padding"] = self.padding
-		config["activation"] = self.activation,
+		config["activation"] = self.activation
 		config["normalization"] = self.normalization
 		config["l2_value"] = self.l2_value
 		return config

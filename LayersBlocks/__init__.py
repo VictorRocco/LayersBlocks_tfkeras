@@ -3,12 +3,14 @@ from .ResidualFPA import *
 from .CSE import *
 from .SSE import *
 from .CSSE import *
-from .Residual2xConv2D import *
+from .ResidualConv2D import *
+from .PPM import *
 
 __all__ = ['FullPreActivation',
            'ResidualFPA',
            'CSE',
            'SSE',
            'CSSE',
-           'Residual2xConv2D'
+           'ResidualConv2D',
+           'PPM',
            ]

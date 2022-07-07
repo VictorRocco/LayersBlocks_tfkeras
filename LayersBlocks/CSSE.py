@@ -49,6 +49,7 @@ class CSSE(tf.keras.layers.Layer):
 	def get_config(self):
 
 		config = super().get_config()
+		config["name_prefix"] = self.name_prefix
 		config["activation"] = self.activation
 		config["l2_value"] = self.l2_value
 		config["ratio"] = self.ratio
