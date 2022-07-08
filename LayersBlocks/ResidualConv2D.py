@@ -24,9 +24,9 @@ class ResidualConv2D(tf.keras.layers.Layer):
         self.activation = activation
         self.l2_value = l2_value
 
-        if activation == "LR010":
+        if self.activation == "LR010":
             self.f_activation = LeakyReLU(0.10)
-        elif activation == "RELU":
+        elif self.activation == "RELU":
             self.f_activation = ReLU()
         else:
             self.f_activation = None

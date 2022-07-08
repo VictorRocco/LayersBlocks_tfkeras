@@ -27,24 +27,26 @@ class FullPreActivation(tf.keras.layers.Layer):
 		self.normalization = normalization
 		self.l2_value = l2_value
 
-		if normalization == "IN":
+		if self.normalization == "IN":
 			self.f_normalization = InstanceNormalization(axis=-1, center=True, scale=True,
 														 beta_initializer="random_uniform",
 														 gamma_initializer="random_uniform")
-		elif normalization == "BN":
+		elif self.normalization == "BN":
 			self.f_normalization = BatchNormalization()
 		else:
 			self.f_normalization = None
 
-		if activation == "LR010":
+		if self.activation == "LR010":
 			self.f_activation = LeakyReLU(0.10)
-		elif activation == "RELU":
+		elif self.activation == "RELU":
 			self.f_activation = ReLU()
 		else:
 			self.f_activation = None
 
-		self.f_conv2d = Conv2D(filters=num_out_filters, kernel_size=kernel_size, strides=strides, dilation_rate=dilation_rate,
-							   padding=padding, kernel_regularizer=l2(l2_value), bias_regularizer=l2(l2_value))
+		self.f_conv2d = Conv2D(filters=self.num_out_filters, kernel_size=self.kernel_size,
+							   strides=self.strides, dilation_rate=self.dilation_rate,
+							   padding=self.padding, kernel_regularizer=l2(self.l2_value),
+							   bias_regularizer=l2(self.l2_value))
 
 	def call(self, X):
 	

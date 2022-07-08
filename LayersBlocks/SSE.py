@@ -23,7 +23,7 @@ class SSE(tf.keras.layers.Layer):
 		self.l2_value = l2_value
 
 		self.f_sse = Conv2D(1, (1, 1), activation='sigmoid', use_bias=False, kernel_initializer='he_normal',
-							kernel_regularizer=l2(l2_value), bias_regularizer=l2(l2_value))
+							kernel_regularizer=l2(self.l2_value), bias_regularizer=l2(self.l2_value))
 
 		self.f_multiply = Multiply()
 

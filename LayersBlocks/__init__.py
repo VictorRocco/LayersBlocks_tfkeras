@@ -5,6 +5,7 @@ from .SSE import *
 from .CSSE import *
 from .ResidualConv2D import *
 from .PPM import *
+from .ASPP import *
 
 __all__ = ['FullPreActivation',
            'ResidualFPA',
@@ -13,4 +14,5 @@ __all__ = ['FullPreActivation',
            'CSSE',
            'ResidualConv2D',
            'PPM',
+           'ASPP',
            ]

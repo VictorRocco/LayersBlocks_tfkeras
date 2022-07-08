@@ -1,6 +1,7 @@
 # Pyramid Pooling Module
 # Simil to Pyramid Scene Parsing Network by Hengshuang Zhao et al 2017
-# Uses FullPreActivation, and Add instead of Concatenate 1/N filters
+# Uses FullPreActivation, and Add instead of Concatenate 1/N filters,
+# kernel size 3x3 instead of 1x1
 # https://arxiv.org/abs/1612.01105
 # https://github.com/hszhao/PSPNet
 # https://github.com/hszhao/semseg/blob/master/model/pspnet.py
@@ -17,7 +18,7 @@ from .FullPreActivation import FullPreActivation
 class PPM(tf.keras.layers.Layer):
 
     def __init__(self, num_out_filters, ppm_rates=[2, 4, 8], name_prefix=None,
-                 kernel_size=(1, 1), strides=(1, 1), dilation_rate=(1, 1), padding="same",
+                 kernel_size=(3, 3), strides=(1, 1), dilation_rate=(1, 1), padding="same",
                  activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
                  normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
                  l2_value=0.001, **kwargs):
@@ -30,7 +31,7 @@ class PPM(tf.keras.layers.Layer):
         self.strides = strides
         self.dilation_rate = dilation_rate
         self.padding = padding
-        self.activation = activation,
+        self.activation = activation
         self.normalization = normalization
         self.l2_value = l2_value
 

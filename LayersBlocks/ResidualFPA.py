@@ -42,8 +42,8 @@ class ResidualFPA(tf.keras.layers.Layer):
                                          normalization=self.normalization, l2_value=self.l2_value)
 
         # Si es necesario ajusto la cantidad de filtros finales para poder hacer el ADD
-        self.f_conv2d = Conv2D(filters=num_out_filters, kernel_size=(1, 1), padding="same", kernel_regularizer=l2(l2_value),
-                               bias_regularizer=l2(l2_value))
+        self.f_conv2d = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1), padding="same",
+                               kernel_regularizer=l2(self.l2_value), bias_regularizer=l2(self.l2_value))
 
         self.f_add = Add()
 
