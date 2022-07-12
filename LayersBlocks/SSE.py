@@ -16,10 +16,9 @@ from tensorflow.keras.regularizers import l2
 @tf.keras.utils.register_keras_serializable()
 class SSE(tf.keras.layers.Layer):
 
-	def __init__(self, name_prefix=None, l2_value=0.001, **kwargs):
+	def __init__(self, l2_value=0.001, **kwargs):
         			
-		super().__init__(name=str(name_prefix)+"_SSE", **kwargs)
-		self.name_prefix = name_prefix
+		super().__init__(**kwargs)
 		self.l2_value = l2_value
 
 		self.f_sse = Conv2D(1, (1, 1), activation='sigmoid', use_bias=False, kernel_initializer='he_normal',
@@ -40,7 +39,5 @@ class SSE(tf.keras.layers.Layer):
 	def get_config(self):
 
 		config = super().get_config()
-		config["name_prefix"] = self.name_prefix
 		config["l2_value"] = self.l2_value
-		config["ratio"] = self.ratio
 		return config

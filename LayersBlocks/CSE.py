@@ -16,11 +16,10 @@ from tensorflow.keras.regularizers import l2
 @tf.keras.utils.register_keras_serializable()
 class CSE(tf.keras.layers.Layer):
 
-	def __init__(self, name_prefix=None, activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
+	def __init__(self, activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
 				 l2_value=0.001, ratio=16, **kwargs):
         			
-		super().__init__(name=str(name_prefix)+"_CSE", **kwargs)
-		self.name_prefix = name_prefix
+		super().__init__(**kwargs)
 		self.activation = activation
 		self.l2_value = l2_value
 		self.ratio = ratio
@@ -65,7 +64,6 @@ class CSE(tf.keras.layers.Layer):
 	def get_config(self):
 
 		config = super().get_config()
-		config["name_prefix"] = self.name_prefix
 		config["activation"] = self.activation
 		config["l2_value"] = self.l2_value
 		config["ratio"] = self.ratio

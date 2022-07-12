@@ -15,16 +15,15 @@ from .FullPreActivation import FullPreActivation
 @tf.keras.utils.register_keras_serializable()
 class ASPP(tf.keras.layers.Layer):
 
-    def __init__(self, num_out_filters, aspp_rates=[2, 4, 8], name_prefix=None,
+    def __init__(self, num_out_filters, aspp_rates=[2, 4, 8],
                  kernel_size=(3, 3), strides=(1, 1), padding="same",
                  activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
                  normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
                  l2_value=0.001, **kwargs):
 
-        super().__init__(name=str(name_prefix)+"_ASPP", **kwargs)
+        super().__init__(**kwargs)
         self.num_out_filters = num_out_filters
         self.aspp_rates = aspp_rates
-        self.name_prefix = name_prefix
         self.kernel_size = kernel_size
         self.strides = strides
         self.padding = padding
@@ -77,7 +76,6 @@ class ASPP(tf.keras.layers.Layer):
         config = super().get_config()
         config["num_out_filters"] = self.num_out_filters
         config["aspp_rates"] = self.aspp_rates
-        config["name_prefix"] = self.name_prefix
         config["kernel_size"] = self.kernel_size
         config["strides"] = self.strides
         config["padding"] = self.padding

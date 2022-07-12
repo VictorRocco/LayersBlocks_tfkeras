@@ -17,16 +17,15 @@ from .FullPreActivation import FullPreActivation
 @tf.keras.utils.register_keras_serializable()
 class PPM(tf.keras.layers.Layer):
 
-    def __init__(self, num_out_filters, ppm_rates=[2, 4, 8], name_prefix=None,
+    def __init__(self, num_out_filters, ppm_rates=[2, 4, 8],
                  kernel_size=(3, 3), strides=(1, 1), dilation_rate=(1, 1), padding="same",
                  activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
                  normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
                  l2_value=0.001, **kwargs):
 
-        super().__init__(name=str(name_prefix)+"_PPM", **kwargs)
+        super().__init__(**kwargs)
         self.num_out_filters = num_out_filters
         self.ppm_rates = ppm_rates
-        self.name_prefix = name_prefix
         self.kernel_size = kernel_size
         self.strides = strides
         self.dilation_rate = dilation_rate
@@ -42,7 +41,7 @@ class PPM(tf.keras.layers.Layer):
         for rate in self.ppm_rates:
             self.f_avg_pool_2d[rate] = AveragePooling2D(pool_size=(rate, rate))
             self.f_fpa[rate] = FullPreActivation(num_out_filters=self.num_out_filters,
-                                                 name_prefix=self.name_prefix, kernel_size=self.kernel_size,
+                                                 kernel_size=self.kernel_size,
                                                  strides=self.strides, dilation_rate=self.dilation_rate,
                                                  padding=self.padding, activation=self.activation,
                                                  normalization=self.normalization, l2_value=self.l2_value)
@@ -69,7 +68,6 @@ class PPM(tf.keras.layers.Layer):
         config = super().get_config()
         config["num_out_filters"] = self.num_out_filters
         config["ppm_rates"] = self.ppm_rates
-        config["name_prefix"] = self.name_prefix
         config["kernel_size"] = self.kernel_size
         config["strides"] = self.strides
         config["dilation_rate"] = self.dilation_rate

@@ -10,15 +10,14 @@ from tensorflow_addons.layers import InstanceNormalization
 @tf.keras.utils.register_keras_serializable()
 class StdCNA(tf.keras.layers.Layer):
 
-	def __init__(self, num_out_filters, name_prefix=None,
+	def __init__(self, num_out_filters,
 				 kernel_size=(3, 3), strides=(1, 1), dilation_rate=(1, 1),
 				 padding="same", activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
 				 normalization="IN", #IN=InstanceNormalization, BN=BatchNormalization, None
 				 l2_value=0.001, **kwargs):
 
-		super().__init__(name="StdCNA" if name_prefix is None else str(name_prefix)+"_StdCNA", **kwargs)
+		super().__init__(**kwargs)
 		self.num_out_filters = num_out_filters
-		self.name_prefix = name_prefix
 		self.kernel_size = kernel_size
 		self.strides = strides
 		self.dilation_rate = dilation_rate
@@ -68,7 +67,6 @@ class StdCNA(tf.keras.layers.Layer):
 
 		config = super().get_config()
 		config["num_out_filters"] = self.num_out_filters
-		config["name_prefix"] = self.name_prefix
 		config["kernel_size"] = self.kernel_size
 		config["strides"] = self.strides
 		config["dilation_rate"] = self.dilation_rate

@@ -1,5 +1,4 @@
-# Full Pre Activation sequence: (Normalization) + (Activation) + Conv2d
-# https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
+# Configurable Unet
 
 import tensorflow as tf
 
@@ -8,14 +7,14 @@ from tensorflow.keras.regularizers import l2
 from tensorflow_addons.layers import InstanceNormalization
 
 @tf.keras.utils.register_keras_serializable()
-class FullPreActivation(tf.keras.layers.Layer):
+class Unet(tf.keras.layers.Layer):
 
-	def __init__(self, num_out_filters,
+	def __init__(self, num_out_filters, num_unet_filters,
 				 kernel_size=(3, 3), strides=(1, 1), dilation_rate=(1, 1),
 				 padding="same", activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
 				 normalization="IN", #IN=InstanceNormalization, BN=BatchNormalization, None
 				 l2_value=0.001, **kwargs):
-        			
+
 		super().__init__(**kwargs)
 		self.num_out_filters = num_out_filters
 		self.kernel_size = kernel_size
@@ -25,6 +24,11 @@ class FullPreActivation(tf.keras.layers.Layer):
 		self.activation = activation,
 		self.normalization = normalization
 		self.l2_value = l2_value
+
+		self.f_conv2d = Conv2D(filters=self.num_out_filters, kernel_size=self.kernel_size,
+							   strides=self.strides, dilation_rate=self.dilation_rate,
+							   padding=self.padding, kernel_regularizer=l2(self.l2_value),
+							   bias_regularizer=l2(self.l2_value))
 
 		if self.normalization == "IN":
 			self.f_normalization = InstanceNormalization(axis=-1, center=True, scale=True,
@@ -42,25 +46,20 @@ class FullPreActivation(tf.keras.layers.Layer):
 		else:
 			self.f_activation = None
 
-		self.f_conv2d = Conv2D(filters=self.num_out_filters, kernel_size=self.kernel_size,
-							   strides=self.strides, dilation_rate=self.dilation_rate,
-							   padding=self.padding, kernel_regularizer=l2(self.l2_value),
-							   bias_regularizer=l2(self.l2_value))
-
 	def call(self, X):
+	
+		Y = self.f_conv2d(X)
 
 		if self.f_normalization != None:
 			Y = self.f_normalization(X)
 		else:
-			Y = X
+			Y = Y
 
 		if self.f_activation != None:
 			Y = self.f_activation(Y)
 		else:
 			Y = Y
 
-		Y = self.f_conv2d(Y)
-		
 		return Y
 
 	def get_config(self):
@@ -75,5 +74,4 @@ class FullPreActivation(tf.keras.layers.Layer):
 		config["normalization"] = self.normalization
 		config["l2_value"] = self.l2_value
 		return config
-
 
