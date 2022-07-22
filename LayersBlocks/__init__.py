@@ -8,6 +8,8 @@ from .PPM import *
 from .ASPP import *
 from .StdCNA import *
 from .ResidualUnet import *
+from .Activation import *
+from .Normalization import *
 
 __all__ = ['FullPreActivation',
            'ResidualFPA',
@@ -19,4 +21,6 @@ __all__ = ['FullPreActivation',
            'ASPP',
            'StdCNA',
            'ResidualUnet',
+           'Activation',
+           'Normalization'
            ]

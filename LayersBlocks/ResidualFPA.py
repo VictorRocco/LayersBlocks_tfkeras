@@ -40,21 +40,25 @@ class ResidualFPA(tf.keras.layers.Layer):
                                          padding=self.padding, activation=self.activation,
                                          normalization=self.normalization, l2_value=self.l2_value)
 
-        # Si es necesario ajusto la cantidad de filtros finales para poder hacer el ADD
-        self.f_conv2d = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1), padding="same",
-                               kernel_regularizer=l2(self.l2_value), bias_regularizer=l2(self.l2_value))
-
         self.f_add = Add()
+
+    def build(self, input_shape):
+
+        # Si es necesario ajusto la cantidad de filtros finales para poder hacer el Residual ADD
+        self.input_channels = input_shape[-1]
+        if self.num_out_filters != self.input_channels:
+            self.f_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1))
 
     def call(self, X):
 
-        Y = self.f_fpa_1(X)
+        Y = X
+
+        Y = self.f_fpa_1(Y)
         Y = self.f_fpa_2(Y)
 
-        # Si es necesario ajusto la cantidad de filtros finales para poder hacer el ADD
-        input_filters = X.shape[-1]
-        if self.num_out_filters != input_filters:
-            Y = self.f_add([self.f_conv2d(X), Y])
+        # Si es necesario ajusto la cantidad de filtros finales para poder hacer el Residual ADD
+        if self.num_out_filters != self.input_channels:
+            Y = self.f_add([self.f_conv2d_num_filters(X), Y])
         else:
             Y = self.f_add([X, Y])
 

@@ -44,20 +44,19 @@ class ResidualConv2D(tf.keras.layers.Layer):
 
     def build(self, input_shape):
 
-        # Si es necesario ajusto la cantidad de filtros finales para poder hacer el ADD
+        # Si es necesario ajusto la cantidad de filtros finales para poder hacer el Residual ADD
         self.input_channels = input_shape[-1]
         if self.num_out_filters != self.input_channels:
-            self.f_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=self.kernel_size,
-                                               strides=self.strides, dilation_rate=self.dilation_rate,
-                                               padding=self.padding, kernel_regularizer=l2(self.l2_value),
-                                               bias_regularizer=l2(self.l2_value))
+            self.f_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1))
 
     def call(self, X):
 
-        Y = self.f_conv2d_1(X)
+        Y = X
+
+        Y = self.f_conv2d_1(Y)
         Y = self.f_conv2d_2(Y)
 
-        # Si es necesario ajusto la cantidad de filtros finales para poder hacer el ADD
+        # Si es necesario ajusto la cantidad de filtros finales para poder hacer el Residual ADD
         if self.num_out_filters != self.input_channels:
             Y = self.f_add([self.f_conv2d_num_filters(X), Y])
         else:

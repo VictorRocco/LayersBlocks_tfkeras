@@ -48,18 +48,16 @@ class StdCNA(tf.keras.layers.Layer):
 			self.f_activation = None
 
 	def call(self, X):
-	
-		Y = self.f_conv2d(X)
+
+		Y = X
+
+		Y = self.f_conv2d(Y)
 
 		if self.f_normalization != None:
-			Y = self.f_normalization(X)
-		else:
-			Y = Y
+			Y = self.f_normalization(Y)
 
 		if self.f_activation != None:
 			Y = self.f_activation(Y)
-		else:
-			Y = Y
 
 		return Y
 
