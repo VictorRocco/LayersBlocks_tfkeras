@@ -34,9 +34,7 @@ class CSSE(tf.keras.layers.Layer):
 			self.f_activation = None
 
 		self.f_cse = CSE(activation=self.activation, l2_value=self.l2_value, ratio=self.ratio)
-
 		self.f_sse = SSE(l2_value=self.l2_value)
-
 		self.f_add = Add()
 
 	def call(self, X):

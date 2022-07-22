@@ -4,8 +4,8 @@
 
 import tensorflow as tf
 
-from tf.keras.layers import *
-from tf.keras.regularizers import l2
+from tensorflow.keras.layers import *
+from tensorflow.keras.regularizers import l2
 
 @tf.keras.utils.register_keras_serializable()
 class Activation(tf.keras.layers.Layer):

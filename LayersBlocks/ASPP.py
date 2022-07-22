@@ -10,7 +10,9 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
 from tensorflow_addons.layers import InstanceNormalization
 
-from .FullPreActivation import FullPreActivation
+from .Normalization import Normalization
+from .Activation import Activation
+
 
 @tf.keras.utils.register_keras_serializable()
 class ASPP(tf.keras.layers.Layer):
@@ -31,42 +33,26 @@ class ASPP(tf.keras.layers.Layer):
         self.normalization = normalization
         self.l2_value = l2_value
 
-        if normalization == "IN":
-            self.f_normalization = InstanceNormalization(axis=-1, center=True, scale=True,
-                                                         beta_initializer="random_uniform",
-                                                         gamma_initializer="random_uniform")
-        elif normalization == "BN":
-            self.f_normalization = BatchNormalization()
-        else:
-            self.f_normalization = None
-
-        if activation == "LR010":
-            self.f_activation = LeakyReLU(0.10)
-        elif activation == "RELU":
-            self.f_activation = ReLU()
-        else:
-            self.f_activation = None
+        self.f_normalization = Normalization(normalization=self.normalization)
+        self.f_activation = Activation(activation=self.activation)
 
         self.f_conv2d_by_rate = {}
-
         for rate in self.aspp_rates:
             self.f_conv2d_by_rate[rate] = Conv2D(filters=self.num_out_filters, kernel_size=self.kernel_size,
                                                  strides=self.strides, dilation_rate=rate,
                                                  padding=self.padding, kernel_regularizer=l2(self.l2_value),
                                                  bias_regularizer=l2(self.l2_value))
-
         self.f_add = Add()
 
     def call(self, X):
 
-        Y = self.f_normalization(X)
+        Y = X
+        Y = self.f_normalization(Y)
         Y = self.f_activation(Y)
 
         aspp_operations_by_rate = list()
-
         for rate in self.aspp_rates:
             aspp_operations_by_rate.append(self.f_conv2d_by_rate[rate](Y))
-
         Y = self.f_add(aspp_operations_by_rate)
 
         return Y

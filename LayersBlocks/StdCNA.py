@@ -7,6 +7,9 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
 from tensorflow_addons.layers import InstanceNormalization
 
+from .Normalization import Normalization
+from .Activation import Activation
+
 @tf.keras.utils.register_keras_serializable()
 class StdCNA(tf.keras.layers.Layer):
 
@@ -30,34 +33,15 @@ class StdCNA(tf.keras.layers.Layer):
 							   strides=self.strides, dilation_rate=self.dilation_rate,
 							   padding=self.padding, kernel_regularizer=l2(self.l2_value),
 							   bias_regularizer=l2(self.l2_value))
-
-		if self.normalization == "IN":
-			self.f_normalization = InstanceNormalization(axis=-1, center=True, scale=True,
-														 beta_initializer="random_uniform",
-														 gamma_initializer="random_uniform")
-		elif self.normalization == "BN":
-			self.f_normalization = BatchNormalization()
-		else:
-			self.f_normalization = None
-
-		if self.activation == "LR010":
-			self.f_activation = LeakyReLU(0.10)
-		elif self.activation == "RELU":
-			self.f_activation = ReLU()
-		else:
-			self.f_activation = None
+		self.f_normalization = Normalization(normalization=self.normalization)
+		self.f_activation = Activation(activation=self.activation)
 
 	def call(self, X):
 
 		Y = X
-
 		Y = self.f_conv2d(Y)
-
-		if self.f_normalization != None:
-			Y = self.f_normalization(Y)
-
-		if self.f_activation != None:
-			Y = self.f_activation(Y)
+		Y = self.f_normalization(Y)
+		Y = self.f_activation(Y)
 
 		return Y
 
