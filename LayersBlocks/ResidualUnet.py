@@ -27,7 +27,8 @@ class ResidualUnet(tf.keras.layers.Layer):
 		self.l2_value = l2_value
 
 		#Residual Input
-		self.f_stdcna_in = StdCNA(num_out_filters=self.num_out_filters, l2_value=self.l2_value)
+		self.f_stdcna_in = StdCNA(num_out_filters=self.num_out_filters, normalization="BN",
+								  l2_value=self.l2_value)
 
 		#Encoder
 		self.f_encoder_stdcna = {}
@@ -38,7 +39,8 @@ class ResidualUnet(tf.keras.layers.Layer):
 				filters = num_out_filters
 			else:
 				filters = num_unet_filters
-			self.f_encoder_stdcna[num_layer] = StdCNA(num_out_filters=filters, l2_value=self.l2_value)
+			self.f_encoder_stdcna[num_layer] = StdCNA(num_out_filters=filters, normalization="BN",
+													  l2_value=self.l2_value)
 			self.f_maxpool[num_layer] = MaxPool2D((2, 2)) # Downsampling
 
 		#Bottleneck

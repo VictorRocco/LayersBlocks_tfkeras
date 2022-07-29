@@ -1,4 +1,6 @@
-# Atrous Spatial Pyramid Pooling Module
+# =============================================
+# === Atrous Spatial Pyramid Pooling Module ===
+# =============================================
 # Simil to "DeepLab: Semantic Image Segmentation with Deep Convolutional Nets,
 # Atrous Convolution, and Fully Connected CRFs"
 # Use shared FullPreActivation
@@ -29,7 +31,7 @@ class ASPP(tf.keras.layers.Layer):
         self.kernel_size = kernel_size
         self.strides = strides
         self.padding = padding
-        self.activation = activation,
+        self.activation = activation
         self.normalization = normalization
         self.l2_value = l2_value
 
