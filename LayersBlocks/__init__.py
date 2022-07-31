@@ -11,6 +11,7 @@ from .ResidualUnet import *
 from .Activation import *
 from .Normalization import *
 from .ASUP import *
+from .ResidualStdCNA import *
 
 __all__ = ['FullPreActivation',
            'ResidualFPA',
@@ -25,4 +26,5 @@ __all__ = ['FullPreActivation',
            'Activation',
            'Normalization',
            'ASUP',
+           'ResidualStdCNA'
            ]
