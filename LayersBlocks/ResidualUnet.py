@@ -1,4 +1,10 @@
-# Standard Conv2d + Normalization + Activation
+# ==========================================
+# === Residual Unet similar to RSU U2Net ===
+# ==========================================
+
+# sources:
+# https://github.com/xuebinqin/U-2-Net
+# https://arxiv.org/pdf/2005.09007.pdf
 
 import tensorflow as tf
 
@@ -13,6 +19,7 @@ class ResidualUnet(tf.keras.layers.Layer):
 
 	def __init__(self, num_out_filters, num_unet_filters, num_layers,
 				 function="StdCNA", #StdCNA (only one option at the moment)
+				 aggregation="Concatenate", #Concatenate / Add
 				 output_CSE=False,  # False / True
 				 output_dropout=None,  # None or 0.xx
 				 l2_value=0.001, **kwargs):
@@ -22,6 +29,7 @@ class ResidualUnet(tf.keras.layers.Layer):
 		self.num_unet_filters = num_unet_filters
 		self.num_layers = num_layers
 		self.function = function
+		self.aggregation = aggregation
 		self.output_CSE = output_CSE
 		self.output_dropout = output_dropout
 		self.l2_value = l2_value
@@ -46,19 +54,30 @@ class ResidualUnet(tf.keras.layers.Layer):
 		#Bottleneck
 		self.f_bottleneck = StdCNA(num_out_filters=num_unet_filters, l2_value=self.l2_value)
 		self.f_dilated_bottleneck = StdCNA(num_out_filters=num_unet_filters, l2_value=self.l2_value)
-		self.f_bottleneck_add = Add()
+		if self.aggregation == "Concatenate":
+			self.f_bottleneck_aggregation = Concatenate()
+		elif self.aggregation == "Add":
+			self.f_bottleneck_aggregation = Add()
+		else:
+			self.f_bottleneck_aggregation = Concatenate()
 
 		#Decoder
 		self.f_upsampling = {}
-		self.f_decoder_add = {}
+		self.f_decoder_aggregation = {}
 		self.f_decoder_stdcna = {}
 
 		#Ajusto filtros el Deconv Add de la capa de mas arriba
-		self.f_decoder_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1))
+		if self.aggregation == "Add":
+			self.f_decoder_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1))
 
 		for num_layer in reversed(range(self.num_layers)):
 			self.f_upsampling[num_layer] = UpSampling2D((2, 2), interpolation='bilinear')
-			self.f_decoder_add[num_layer] = Add()
+			if self.aggregation == "Concatenate":
+				self.f_decoder_aggregation[num_layer] = Concatenate()
+			elif self.aggregation == "Add":
+				self.f_decoder_aggregation[num_layer] = Add()
+			else:
+				self.f_decoder_aggregation[num_layer] = Concatenate()
 			if num_layer == 0: #la 1ra (de mas arriba) out_filters, el resto unet_filters
 				filters = num_out_filters
 			else:
@@ -97,17 +116,17 @@ class ResidualUnet(tf.keras.layers.Layer):
 		# Bridge
 		self.bottleneck_result = self.f_bottleneck(Y)
 		self.dilated_bottleneck_result = self.f_dilated_bottleneck(Y)
-		Y = self.f_bottleneck_add([self.bottleneck_result, self.dilated_bottleneck_result])
+		Y = self.f_bottleneck_aggregation([self.bottleneck_result, self.dilated_bottleneck_result])
 
 		# Decoder
 		for num_layer in reversed(range(self.num_layers)):
 			Y = self.f_upsampling[num_layer](Y)
 			# Ajusto filtros el Deconv Add de la capa de mas arriba
-			if Y.shape[-1] != self.skip_connection[num_layer].shape[-1]:
-				Y = self.f_decoder_add[num_layer]([self.f_decoder_conv2d_num_filters(Y),
-												   self.skip_connection[num_layer]])
+			if (self.aggregation == "Add") and (Y.shape[-1] != self.skip_connection[num_layer].shape[-1]):
+				Y = self.f_decoder_aggregation[num_layer]([self.f_decoder_conv2d_num_filters(Y),
+														   self.skip_connection[num_layer]])
 			else:
-				Y = self.f_decoder_add[num_layer]([Y, self.skip_connection[num_layer]])
+				Y = self.f_decoder_aggregation[num_layer]([Y, self.skip_connection[num_layer]])
 			Y = self.f_decoder_stdcna[num_layer](Y)
 
 		#Output
@@ -133,6 +152,7 @@ class ResidualUnet(tf.keras.layers.Layer):
 		config["num_unet_filters"] = self.num_unet_filters
 		config["num_layers"] = self.num_layers
 		config["function"] = self.function
+		config["aggregation"] = self.aggregation
 		config["output_CSE"] = self.output_CSE
 		config["output_dropout"] = self.output_dropout
 		config["l2_value"] = self.l2_value

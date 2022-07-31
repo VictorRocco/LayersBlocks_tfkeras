@@ -27,7 +27,7 @@ class Activation(tf.keras.layers.Layer):
 
 		Y = X
 		if self.f_activation != None:
-			Y = self.activation(Y)
+			Y = self.f_activation(Y)
 		return Y
 
 	def get_config(self):
