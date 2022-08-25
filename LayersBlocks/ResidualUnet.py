@@ -64,7 +64,7 @@ class ResidualUnet(tf.keras.layers.Layer):
 		self.f_decoder_aggregation = {}
 		self.f_decoder_stdcna = {}
 
-		#Ajusto filtros el Deconv Add de la capa de mas arriba
+		#Ajusto filtros el Deconv Add de la capa de mas arriba (sin activacion)
 		if self.aggregation == "Add":
 			self.f_decoder_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1))
 
@@ -93,7 +93,8 @@ class ResidualUnet(tf.keras.layers.Layer):
 
 	def build(self, input_shape):
 
-		# Si es necesario ajusto la cantidad de filtros finales para poder hacer el Residual ADD
+		# Si es necesario ajusto la cantidad de filtros finales
+		# para poder hacer el Residual ADD (sin activacion)
 		self.input_channels = input_shape[-1]
 		if self.num_out_filters != self.input_channels:
 			self.f_output_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1))

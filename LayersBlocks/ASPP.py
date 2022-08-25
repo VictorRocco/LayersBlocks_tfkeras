@@ -14,13 +14,13 @@ from tensorflow_addons.layers import InstanceNormalization
 
 from .Normalization import Normalization
 from .Activation import Activation
-
+from .lbConv2D import lbConv2D
 
 @tf.keras.utils.register_keras_serializable()
 class ASPP(tf.keras.layers.Layer):
 
     def __init__(self, num_out_filters, aspp_rates=[2, 4, 8],
-                 kernel_size=(3, 3), strides=(1, 1), padding="same",
+                 kernel_size=(3, 3), strides=(1, 1), padding="symmetric",
                  activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
                  normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
                  l2_value=0.001, **kwargs):
@@ -40,10 +40,10 @@ class ASPP(tf.keras.layers.Layer):
 
         self.f_conv2d_by_rate = {}
         for rate in self.aspp_rates:
-            self.f_conv2d_by_rate[rate] = Conv2D(filters=self.num_out_filters, kernel_size=self.kernel_size,
-                                                 strides=self.strides, dilation_rate=rate,
-                                                 padding=self.padding, kernel_regularizer=l2(self.l2_value),
-                                                 bias_regularizer=l2(self.l2_value))
+            self.f_conv2d_by_rate[rate] = lbConv2D(num_out_filters=self.num_out_filters, kernel_size=self.kernel_size,
+                                                   strides=self.strides, dilation_rate=(rate, rate),
+                                                   padding=self.padding, activation=None, l2_value=self.l2_value)
+
         self.f_add = Add()
 
     def call(self, X):
@@ -54,7 +54,10 @@ class ASPP(tf.keras.layers.Layer):
 
         aspp_operations_by_rate = list()
         for rate in self.aspp_rates:
-            aspp_operations_by_rate.append(self.f_conv2d_by_rate[rate](Y))
+            aspp_operation = self.f_conv2d_by_rate[rate](Y)
+            aspp_operations_by_rate.append(aspp_operation)
+            # print("in", X.shape, "out", aspp_operation.shape, "kernel", self.kernel_size, "strides", self.strides,
+            #      "rate", rate, flush=True)
         Y = self.f_add(aspp_operations_by_rate)
 
         return Y

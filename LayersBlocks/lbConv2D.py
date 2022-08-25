@@ -4,8 +4,12 @@
 # ===================================================
 
 # sources
-# - A guide to convolution arithmetic for deep learning
-#   https://stats.stackexchange.com/questions/297678/how-to-calculate-optimal-zero-padding-for-convolutional-neural-networks
+# - How to keep the shape of input and output same when dilation conv?
+#   https://discuss.pytorch.org/t/how-to-keep-the-shape-of-input-and-output-same-when-dilation-conv/14338
+# - Implementing 'SAME' and 'VALID' padding of Tensorflow in Python
+#   https://mmuratarat.github.io/2019-01-17/implementing-padding-schemes-of-tensorflow-in-python
+# - Convolution Visualizer
+#   https://ezyang.github.io/convolution-visualizer/index.html
 
 import tensorflow as tf
 
@@ -48,24 +52,38 @@ class lbConv2D(tf.keras.layers.Layer):
             stride_w = self.strides[1]
             kernel_h = self.kernel_size[0]
             kernel_w = self.kernel_size[1]
-            output_h = tf.cast(tf.math.ceil(input_h / stride_h), tf.int32)
-            output_w = tf.cast(tf.math.ceil(input_w / stride_w), tf.int32)
+            dilation_h = self.dilation_rate[0]
+            dilation_w = self.dilation_rate[1]
 
+            # NOTE: "original" works when dilation = 1, if dilatio != 1 it does'nt work
+            # I fixed dilation != 1 with:
+            # 1) https://mmuratarat.github.io/2019-01-17/implementing-padding-schemes-of-tensorflow-in-python
+            # 2) https://ezyang.github.io/convolution-visualizer/index.html
+            # The visualizer shows padding = 2 * dilation when: (input = N * 8) and Kernel = 3 (odd)
+            # Also the correct formulae is )not implemented here, but verified with convolution visualizer):
+            # padding (each side) = [(input-1)*stride -input +kernel + (kernel-1)*(dil-1)] / 2
             if input_h % stride_h == 0:
-                pad_along_height = tf.math.maximum((kernel_h - stride_h), 0)
+                # pad_along_height = tf.math.maximum((kernel_h - stride_h), 0) #original
+                pad_along_height = tf.math.maximum((kernel_h - stride_h), 2 * dilation_h) #VNR
             else:
-                pad_along_height = tf.math.maximum(kernel_h - (input_h % stride_h), 0)
+                # pad_along_height = tf.math.maximum(kernel_h - (input_h % stride_h), 0) #original
+                pad_along_height = tf.math.maximum(kernel_h - (input_h % stride_h), 2 * dilation_h) #VNR
             if input_w % stride_w == 0:
-                pad_along_width = tf.math.maximum((kernel_w - stride_w), 0)
+                # pad_along_width = tf.math.maximum((kernel_w - stride_w), 0) #original
+                pad_along_width = tf.math.maximum((kernel_w - stride_w), 2 * dilation_w) #VNR
             else:
-                pad_along_width = tf.math.maximum(kernel_w - (input_w % stride_w), 0)
+                # pad_along_width = tf.math.maximum(kernel_w - (input_w % stride_w), 0) #original
+                pad_along_width = tf.math.maximum(kernel_w - (input_w % stride_w), 2 * dilation_w) #VNR
 
-            pad_top = pad_along_height // 2  # amount padding on the top
-            pad_bottom = pad_along_height - pad_top  # amount padding on the bottom
-            pad_left = pad_along_width // 2  # amount of padding on the left
-            pad_right = pad_along_width - pad_left  # amount of padding on the right
+            pad_top = int(pad_along_height // 2)  # amount padding on the top
+            pad_bottom = int(pad_along_height - pad_top)  # amount padding on the bottom
+            pad_left = int(pad_along_width // 2)  # amount of padding on the left
+            pad_right = int(pad_along_width - pad_left)  # amount of padding on the right
 
-            self.tfpad_paddings =  tf.constant([[0, 0], [pad_top, pad_bottom], [pad_left, pad_right], [0, 0]])
+            # print("pad_top", pad_top, "pad_bottom", pad_bottom, "pad_left", pad_left, "pad_right", pad_right)
+
+            self.tfpad_paddings =  tf.constant([[0, 0], [pad_top, pad_bottom],
+                                                [pad_left, pad_right], [0, 0]])
             self.f_conv2d = Conv2D(filters=self.num_out_filters, kernel_size=self.kernel_size,
                                    strides=self.strides, dilation_rate=self.dilation_rate,
                                    padding="valid", kernel_regularizer=l2(self.l2_value),

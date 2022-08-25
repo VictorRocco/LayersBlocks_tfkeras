@@ -31,11 +31,9 @@ class StdCNA(tf.keras.layers.Layer):
 		self.normalization = normalization
 		self.l2_value = l2_value
 
-		self.f_conv2d = lbConv2D(filters=self.num_out_filters, kernel_size=self.kernel_size,
+		self.f_conv2d = lbConv2D(num_out_filters=self.num_out_filters, kernel_size=self.kernel_size,
 								 strides=self.strides, dilation_rate=self.dilation_rate,
-								 padding=self.padding, activation=None,
-								 kernel_regularizer=l2(self.l2_value),
-								 bias_regularizer=l2(self.l2_value))
+								 padding=self.padding, activation=None, l2_value=self.l2_value)
 		self.f_normalization = Normalization(normalization=self.normalization)
 		self.f_activation = Activation(activation=self.activation)
 
