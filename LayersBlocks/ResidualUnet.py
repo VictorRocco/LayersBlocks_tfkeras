@@ -51,7 +51,7 @@ class ResidualUnet(tf.keras.layers.Layer):
 
 		#Bottleneck
 		self.f_bottleneck = StdCNA(num_out_filters=num_unet_filters, l2_value=self.l2_value)
-		self.f_dilated_bottleneck = StdCNA(num_out_filters=num_unet_filters, l2_value=self.l2_value)
+		self.f_dilated_bottleneck = StdCNA(num_out_filters=num_unet_filters, dilation_rate=(2, 2), l2_value=self.l2_value)
 		if self.aggregation == "Concatenate":
 			self.f_bottleneck_aggregation = Concatenate()
 		elif self.aggregation == "Add":

@@ -14,7 +14,8 @@ class ResidualFPA(tf.keras.layers.Layer):
 
     def __init__(self, num_out_filters,
                  kernel_size=(3, 3), strides=(1, 1), dilation_rate=(1, 1),
-                 padding="same", activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+                 padding="symmetric", # same, valid, symmetric, reflect
+                 activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
                  normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
                  l2_value=0.001, **kwargs):
 
