@@ -26,5 +26,6 @@ __all__ = ['FullPreActivation',
            'Activation',
            'Normalization',
            'ASUP',
-           'ResidualStdCNA'
+           'ResidualStdCNA',
+           'lbConv2D'
            ]
