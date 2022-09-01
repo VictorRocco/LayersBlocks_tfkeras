@@ -12,15 +12,18 @@ import tensorflow as tf
 
 from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
+from .lbConv2D import lbConv2D
 
 @tf.keras.utils.register_keras_serializable()
 class CSE(tf.keras.layers.Layer):
 
 	def __init__(self, activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
+				 num_out_filters=None, #None, num_out_filters
 				 l2_value=0.001, ratio=16, **kwargs):
         			
 		super().__init__(**kwargs)
 		self.activation = activation
+		self.num_out_filters = num_out_filters
 		self.l2_value = l2_value
 		self.ratio = ratio
 
@@ -48,6 +51,10 @@ class CSE(tf.keras.layers.Layer):
 							   activation='sigmoid',
 							   kernel_regularizer=l2(self.l2_value), bias_regularizer=l2(self.l2_value))
 
+		if (self.num_out_filters is not None) and (self.num_out_filters != self.input_channels):
+			self.f_matching_num_filters = lbConv2D(num_out_filters=self.num_out_filters, kernel_size=(1, 1),
+					 activation=None, l2_value=self.l2_value) #NOTE: no activation
+
 	def call(self, X):
 
 		# Squeeze operation
@@ -59,12 +66,17 @@ class CSE(tf.keras.layers.Layer):
 
 		Y = self.f_multiply([X, Y])
 
+		#Matching filters
+		if (self.num_out_filters is not None) and (self.num_out_filters != self.input_channels):
+			Y = self.f_matching_num_filters(Y)
+
 		return Y
 
 	def get_config(self):
 
 		config = super().get_config()
 		config["activation"] = self.activation
+		config["num_out_filters"] = self.num_out_filters
 		config["l2_value"] = self.l2_value
 		config["ratio"] = self.ratio
 		return config

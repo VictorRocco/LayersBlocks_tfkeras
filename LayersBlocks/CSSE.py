@@ -18,11 +18,13 @@ from . import CSE, SSE
 @tf.keras.utils.register_keras_serializable()
 class CSSE(tf.keras.layers.Layer):
 
-	def __init__(self, activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
+	def __init__(self, activation="LR010",  #LR010=LeakyReLU(0.10), RELU=ReLU, None
+				 num_out_filters=None,  # None, num_out_filters
 				 l2_value=0.001, ratio=16, **kwargs):
         			
 		super().__init__(**kwargs)
 		self.activation = activation
+		self.num_out_filters = num_out_filters
 		self.l2_value = l2_value
 		self.ratio = ratio
 
@@ -33,7 +35,8 @@ class CSSE(tf.keras.layers.Layer):
 		else:
 			self.f_activation = None
 
-		self.f_cse = CSE(activation=self.activation, l2_value=self.l2_value, ratio=self.ratio)
+		self.f_cse = CSE(activation=self.activation, num_out_filters=self.num_out_filters,
+						 l2_value=self.l2_value, ratio=self.ratio)
 		self.f_sse = SSE(l2_value=self.l2_value)
 		self.f_add = Add()
 
@@ -47,6 +50,7 @@ class CSSE(tf.keras.layers.Layer):
 
 		config = super().get_config()
 		config["activation"] = self.activation
+		config["num_out_filters"] = self.num_out_filters
 		config["l2_value"] = self.l2_value
 		config["ratio"] = self.ratio
 		return config

@@ -62,18 +62,22 @@ class lbConv2D(tf.keras.layers.Layer):
             # The visualizer shows padding = 2 * dilation when: (input = N * 8) and Kernel = 3 (odd)
             # Also the correct formulae is )not implemented here, but verified with convolution visualizer):
             # padding (each side) = [(input-1)*stride -input +kernel + (kernel-1)*(dil-1)] / 2
-            if input_h % stride_h == 0:
+            if (kernel_h == 1 and stride_h == 1 and dilation_h == 1):
+                pad_along_height = 0
+            elif (input_h % stride_h == 0):
                 # pad_along_height = tf.math.maximum((kernel_h - stride_h), 0) #original
                 pad_along_height = tf.math.maximum((kernel_h - stride_h), 2 * dilation_h) #VNR
             else:
                 # pad_along_height = tf.math.maximum(kernel_h - (input_h % stride_h), 0) #original
                 pad_along_height = tf.math.maximum(kernel_h - (input_h % stride_h), 2 * dilation_h) #VNR
-            if input_w % stride_w == 0:
+            if (kernel_w == 1 and stride_w == 1 and dilation_w == 1):
+                pad_along_width = 0
+            elif (input_w % stride_w == 0):
                 # pad_along_width = tf.math.maximum((kernel_w - stride_w), 0) #original
                 pad_along_width = tf.math.maximum((kernel_w - stride_w), 2 * dilation_w) #VNR
             else:
-                # pad_along_width = tf.math.maximum(kernel_w - (input_w % stride_w), 0) #original
-                pad_along_width = tf.math.maximum(kernel_w - (input_w % stride_w), 2 * dilation_w) #VNR
+                pad_along_width = tf.math.maximum(kernel_w - (input_w % stride_w), 0) #original
+                # pad_along_width = tf.math.maximum(kernel_w - (input_w % stride_w), 2 * dilation_w) #VNR
 
             pad_top = int(pad_along_height // 2)  # amount padding on the top
             pad_bottom = int(pad_along_height - pad_top)  # amount padding on the bottom
