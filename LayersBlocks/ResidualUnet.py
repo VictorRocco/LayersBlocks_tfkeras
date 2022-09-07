@@ -20,6 +20,7 @@ class ResidualUnet(tf.keras.layers.Layer):
 	def __init__(self, num_out_filters, num_unet_filters, num_layers,
 				 function="StdCNA", #StdCNA (only one option at the moment)
 				 aggregation="Concatenate", #Concatenate / Add
+				 residual=True, #True=std residual, False=not residual, like U2NET
 				 output_CSE=False,  # False / True
 				 output_dropout=None,  # None or 0.xx
 				 l2_value=0.001, **kwargs):
@@ -30,6 +31,7 @@ class ResidualUnet(tf.keras.layers.Layer):
 		self.num_layers = num_layers
 		self.function = function
 		self.aggregation = aggregation
+		self.residual = residual
 		self.output_CSE = output_CSE
 		self.output_dropout = output_dropout
 		self.l2_value = l2_value
@@ -103,7 +105,7 @@ class ResidualUnet(tf.keras.layers.Layer):
 
 		Y = X
 
-		#Residual Input
+		#(Residual) Input
 		Y = self.f_stdcna_in(Y)
 
 		#Encoder
@@ -130,11 +132,12 @@ class ResidualUnet(tf.keras.layers.Layer):
 
 		#Output
 
-		# Si es necesario ajusto la cantidad de filtros finales para poder hacer el Residual ADD
-		if self.num_out_filters != self.input_channels:
-			Y = self.f_output_add([self.f_output_conv2d_num_filters(X), Y])
-		else:
-			Y = self.f_output_add([X, Y])
+		if self.residual == True:
+			# Si es necesario ajusto la cantidad de filtros finales para poder hacer el Residual ADD
+			if self.num_out_filters != self.input_channels:
+				Y = self.f_output_add([self.f_output_conv2d_num_filters(X), Y])
+			else:
+				Y = self.f_output_add([X, Y])
 
 		if self.output_CSE is not None:
 			Y = self.f_output_CSE(Y)
@@ -152,6 +155,7 @@ class ResidualUnet(tf.keras.layers.Layer):
 		config["num_layers"] = self.num_layers
 		config["function"] = self.function
 		config["aggregation"] = self.aggregation
+		config["residual"] = self.residual
 		config["output_CSE"] = self.output_CSE
 		config["output_dropout"] = self.output_dropout
 		config["l2_value"] = self.l2_value

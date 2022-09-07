@@ -16,6 +16,8 @@ import tensorflow as tf
 from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
 
+from .Activation import Activation
+
 @tf.keras.utils.register_keras_serializable()
 class lbConv2D(tf.keras.layers.Layer):
 
