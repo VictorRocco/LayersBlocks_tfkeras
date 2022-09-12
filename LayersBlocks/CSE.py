@@ -19,7 +19,7 @@ class CSE(tf.keras.layers.Layer):
 
 	def __init__(self, activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
 				 num_out_filters=None, #None, num_out_filters
-				 l2_value=0.001, ratio=16, **kwargs):
+				 l2_value=None, ratio=16, **kwargs):
         			
 		super().__init__(**kwargs)
 		self.activation = activation

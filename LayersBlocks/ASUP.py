@@ -20,7 +20,7 @@ class ASUP(tf.keras.layers.Layer):
                  padding="symmetric", # same, valid, symmetric, reflect
                  activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
                  normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-                 l2_value=0.001, **kwargs):
+                 l2_value=None, **kwargs):
 
         super().__init__(**kwargs)
         self.num_out_filters = num_out_filters

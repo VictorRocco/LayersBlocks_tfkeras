@@ -1,7 +1,8 @@
-# Pyramid Pooling Module
+# ==============================
+# === Pyramid Pooling Module ===
+# ==============================
 # Simil to Pyramid Scene Parsing Network by Hengshuang Zhao et al 2017
-# Uses FullPreActivation, and Add instead of Concatenate 1/N filters,
-# kernel size 3x3 instead of 1x1
+# Uses Add instead of Concatenate 1/N filters, and kernel size 3x3 instead of 1x1
 # https://arxiv.org/abs/1612.01105
 # https://github.com/hszhao/PSPNet
 # https://github.com/hszhao/semseg/blob/master/model/pspnet.py
@@ -22,7 +23,7 @@ class PPM(tf.keras.layers.Layer):
                  padding="symmetric", # same, valid, symmetric, reflect
                  activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
                  normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-                 l2_value=0.001, **kwargs):
+                 l2_value=None, **kwargs):
 
         super().__init__(**kwargs)
         self.num_out_filters = num_out_filters
@@ -36,12 +37,12 @@ class PPM(tf.keras.layers.Layer):
         self.l2_value = l2_value
 
         self.f_avg_pool_2d = {}
-        self.f_fpa = {}
+        self.f_fnc = {}
         self.f_upsample = {}
 
         for rate in self.ppm_rates:
             self.f_avg_pool_2d[rate] = AveragePooling2D(pool_size=(rate, rate))
-            self.f_fpa[rate] = StdCNA(num_out_filters=self.num_out_filters,
+            self.f_fnc[rate] = StdCNA(num_out_filters=self.num_out_filters,
                                       kernel_size=self.kernel_size,
                                       strides=self.strides, dilation_rate=self.dilation_rate,
                                       padding=self.padding, activation=self.activation,
@@ -55,7 +56,7 @@ class PPM(tf.keras.layers.Layer):
         ppm_operations_by_rate = list()
         for rate in self.ppm_rates:
             Y = self.f_avg_pool_2d[rate](X)
-            Y = self.f_fpa[rate](Y)
+            Y = self.f_fnc[rate](Y)
             Y = self.f_upsample[rate](Y)
             ppm_operations_by_rate.append(Y)
         Y = self.f_add(ppm_operations_by_rate)

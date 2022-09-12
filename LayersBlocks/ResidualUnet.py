@@ -23,7 +23,7 @@ class ResidualUnet(tf.keras.layers.Layer):
 				 residual=True, #True=std residual, False=not residual, like U2NET
 				 output_CSE=False,  # False / True
 				 output_dropout=None,  # None or 0.xx
-				 l2_value=0.001, **kwargs):
+				 l2_value=None, **kwargs):
 
 		super().__init__(**kwargs)
 		self.num_out_filters = num_out_filters
