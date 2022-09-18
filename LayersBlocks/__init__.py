@@ -12,6 +12,7 @@ from .Activation import *
 from .Normalization import *
 from .ASUP import *
 from .ResidualStdCNA import *
+from .SubPixelUpSampling2D import *
 
 __all__ = ['FullPreActivation',
            'ResidualFPA',
@@ -27,5 +28,6 @@ __all__ = ['FullPreActivation',
            'Normalization',
            'ASUP',
            'ResidualStdCNA',
-           'lbConv2D'
+           'lbConv2D',
+           'SubPixelUpSampling2D'
            ]

@@ -13,6 +13,7 @@ from tensorflow.keras.regularizers import l2
 
 from .StdCNA import StdCNA
 from .CSE import CSE
+from .lbConv2D import lbConv2D
 
 @tf.keras.utils.register_keras_serializable()
 class ResidualUnet(tf.keras.layers.Layer):
@@ -68,7 +69,8 @@ class ResidualUnet(tf.keras.layers.Layer):
 
 		#Ajusto filtros el Deconv Add de la capa de mas arriba (sin activacion)
 		if self.aggregation == "Add":
-			self.f_decoder_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1))
+			self.f_decoder_conv2d_num_filters = lbConv2D(num_out_filters=self.num_out_filters, kernel_size=(1, 1),
+														 activation=None, l2_value=self.l2_value)
 
 		for num_layer in reversed(range(self.num_layers)):
 			self.f_upsampling[num_layer] = UpSampling2D((2, 2), interpolation='bilinear')
@@ -99,7 +101,8 @@ class ResidualUnet(tf.keras.layers.Layer):
 		# para poder hacer el Residual ADD (sin activacion)
 		self.input_channels = input_shape[-1]
 		if self.num_out_filters != self.input_channels:
-			self.f_output_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1))
+			self.f_output_conv2d_num_filters = lbConv2D(num_out_filters=self.num_out_filters, kernel_size=(1, 1),
+														activation=None, l2_value=self.l2_value)
 
 	def call(self, X):
 
