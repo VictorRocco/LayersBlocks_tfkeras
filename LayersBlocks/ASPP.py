@@ -24,7 +24,7 @@ class ASPP(tf.keras.layers.Layer):
                  padding="symmetric", # same, valid, symmetric, reflect
                  activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
                  normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-                 residual=False, #False, True=residual add
+                 output_mode="as_list", # as_list / residual_add / add / concatenate
                  l2_value=None, **kwargs):
 
         super().__init__(**kwargs)
@@ -35,7 +35,7 @@ class ASPP(tf.keras.layers.Layer):
         self.padding = padding
         self.activation = activation
         self.normalization = normalization
-        self.residual = residual
+        self.output_mode = output_mode
         self.l2_value = l2_value
 
         self.f_stdcna_by_rate = {}
@@ -44,7 +44,16 @@ class ASPP(tf.keras.layers.Layer):
                                                  strides=self.strides, dilation_rate=(rate, rate),
                                                  padding=self.padding, activation=self.activation, l2_value=self.l2_value)
 
-        self.f_add = Add()
+        if self.output_mode == "residual_add":
+            self.f_final_operation = Add()
+        elif self.output_mode == "add":
+            self.f_final_operation = Add()
+        elif self.output_mode == "concatenate":
+            self.f_final_operation = Concatenate()
+        elif self.output_mode == "as_list":
+            self.f_final_operation = None
+        else:
+            raise ValueError('output_mode should be "as_list", "residual_add", "add" or "concatenate", received: ' +str(self.output_mode) +'.')
     def build(self, input_shape):
 
         # Si es necesario ajusto la cantidad de filtros finales
@@ -60,17 +69,21 @@ class ASPP(tf.keras.layers.Layer):
         for rate in self.aspp_rates:
             aspp_operation = self.f_stdcna_by_rate[rate](Y)
             aspp_operations_by_rate.append(aspp_operation)
-            # print("in", X.shape, "out", aspp_operation.shape, "kernel", self.kernel_size, "strides", self.strides,
+            #print("in", X.shape, "out", aspp_operation.shape, "kernel", self.kernel_size, "strides", self.strides,
             #      "rate", rate, flush=True)
 
-        if self.residual == True:
+        if self.f_final_operation == "residual_add":
             # Si es necesario ajusto la cantidad de filtros finales para poder hacer el Residual ADD
             if self.num_out_filters != self.input_channels:
                 aspp_operations_by_rate.append(self.f_output_conv2d_num_filters(X))
             else:
                 aspp_operations_by_rate.append(X)
 
-        Y = self.f_add(aspp_operations_by_rate)
+        if self.f_final_operation != None:
+            Y = self.f_final_operation(aspp_operations_by_rate)
+        else:
+            Y = aspp_operations_by_rate
+
         return Y
 
     def get_config(self):
@@ -83,6 +96,6 @@ class ASPP(tf.keras.layers.Layer):
         config["padding"] = self.padding
         config["activation"] = self.activation
         config["normalization"] = self.normalization
-        config["residual"] = self.residual
+        config["output_mode"] = self.output_mode
         config["l2_value"] = self.l2_value
         return config

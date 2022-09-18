@@ -23,6 +23,7 @@ class PPM(tf.keras.layers.Layer):
                  padding="symmetric", # same, valid, symmetric, reflect
                  activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
                  normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
+                 output_mode="as_list", # as_list / add / concatenate
                  l2_value=None, **kwargs):
 
         super().__init__(**kwargs)
@@ -34,6 +35,7 @@ class PPM(tf.keras.layers.Layer):
         self.padding = padding
         self.activation = activation
         self.normalization = normalization
+        self.output_mode = output_mode
         self.l2_value = l2_value
 
         self.f_avg_pool_2d = {}
@@ -49,7 +51,14 @@ class PPM(tf.keras.layers.Layer):
                                       normalization=self.normalization, l2_value=self.l2_value)
             self.f_upsample[rate] = UpSampling2D(size=(rate, rate), interpolation="bilinear")
 
-        self.f_add = Add()
+        if self.output_mode == "add":
+            self.f_final_operation = Add()
+        elif self.output_mode == "concatenate":
+            self.f_final_operation = Concatenate()
+        elif self.output_mode == "as_list":
+            self.f_final_operation = None
+        else:
+            raise ValueError('output_mode should be "as_list", "add" or "concatenate", received: ' +str(self.output_mode) +'.')
 
     def call(self, X):
 
@@ -59,7 +68,11 @@ class PPM(tf.keras.layers.Layer):
             Y = self.f_fnc[rate](Y)
             Y = self.f_upsample[rate](Y)
             ppm_operations_by_rate.append(Y)
-        Y = self.f_add(ppm_operations_by_rate)
+        if self.f_final_operation != None:
+            Y = self.f_final_operation(ppm_operations_by_rate)
+        else:
+            Y = ppm_operations_by_rate
+
         return Y
 
     def get_config(self):
@@ -73,5 +86,6 @@ class PPM(tf.keras.layers.Layer):
         config["padding"] = self.padding
         config["activation"] = self.activation
         config["normalization"] = self.normalization
+        config["output_mode"] = self.output_mode
         config["l2_value"] = self.l2_value
         return config
