@@ -1,5 +1,7 @@
 # Concurrent Channel/Spatial-wise Squeeze and Excite block
 
+#TODO: use Activation
+
 # https://arxiv.org/abs/1709.01507 - official paper "Squeeze and Excitation Networks"
 # https://github.com/hujie-frank/SENet - official implementation "Squeeze and Excitation Networks"
 # https://arxiv.org/abs/1803.02579 - official paper

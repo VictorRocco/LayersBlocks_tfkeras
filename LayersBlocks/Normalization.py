@@ -13,6 +13,10 @@ class Normalization(tf.keras.layers.Layer):
 
     def __init__(self, normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
                  **kwargs):
+        assert normalization == "IN" or \
+               normalization == "BN" or \
+               normalization == None, \
+               "normalization parameter not valid"
 
         super().__init__(**kwargs)
         self.normalization = normalization

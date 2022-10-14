@@ -27,6 +27,15 @@ class ASPP(tf.keras.layers.Layer):
                  output_mode="as_list", # as_list / residual_add / add / concatenate
                  l2_value=None, **kwargs):
 
+        # assert padding: checked on StdCNA
+        # assert activation: checked on StdCNA
+        # assert normalization: checked on StdCNA
+        assert output_mode == "as_list" or \
+               output_mode == "residual_add" or \
+               output_mode == "add" or \
+               output_mode == "concatenate", \
+            "output_mode parameter not valid"
+
         super().__init__(**kwargs)
         self.num_out_filters = num_out_filters
         self.aspp_rates = aspp_rates

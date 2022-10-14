@@ -22,6 +22,10 @@ class ASUP(tf.keras.layers.Layer):
                  normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
                  l2_value=None, **kwargs):
 
+        # assert padding: checked on StdCNA
+        # assert activation: checked on StdCNA
+        # assert normalization: checked on StdCNA
+
         super().__init__(**kwargs)
         self.num_out_filters = num_out_filters
         self.asup_rates = asup_rates

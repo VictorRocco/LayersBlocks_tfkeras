@@ -17,6 +17,10 @@ class ResidualConv2D(tf.keras.layers.Layer):
                  activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
                  l2_value=None, **kwargs):
 
+        # assert padding: checked on lbConv2D
+        # assert activation: checked on lbConv2D
+        # assert normalization: checked on lbConv2D
+
         super().__init__(**kwargs)
         self.num_out_filters = num_out_filters
         self.kernel_size = kernel_size

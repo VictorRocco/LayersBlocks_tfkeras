@@ -7,6 +7,8 @@
 # https://github.com/hszhao/PSPNet
 # https://github.com/hszhao/semseg/blob/master/model/pspnet.py
 
+# TODO: add residual_add output_mode option
+
 import tensorflow as tf
 
 from tensorflow.keras.layers import *
@@ -25,6 +27,14 @@ class PPM(tf.keras.layers.Layer):
                  normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
                  output_mode="as_list", # as_list / add / concatenate
                  l2_value=None, **kwargs):
+
+        # assert padding: checked on StdCNA
+        # assert activation: checked on StdCNA
+        # assert normalization: checked on StdCNA
+        assert output_mode == "as_list" or \
+               output_mode == "add" or \
+               output_mode == "concatenate", \
+            "output_mode parameter not valid"
 
         super().__init__(**kwargs)
         self.num_out_filters = num_out_filters

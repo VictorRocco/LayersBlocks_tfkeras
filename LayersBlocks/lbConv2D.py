@@ -28,6 +28,14 @@ class lbConv2D(tf.keras.layers.Layer):
                  l2_value=None,
                  **kwargs):
 
+        assert padding == "same" or \
+               padding == "valid" or \
+               padding == "symmetric" or \
+               padding == "reflect", \
+            "padding parameter not valid"
+        # assert activation: checked on Activation
+        # assert normalization: checked on Normalization
+
         super().__init__(**kwargs)
         self.num_out_filters = num_out_filters
         self.kernel_size = kernel_size

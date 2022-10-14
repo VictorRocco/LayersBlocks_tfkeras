@@ -20,7 +20,11 @@ class FullPreActivation(tf.keras.layers.Layer):
 				 activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
 				 normalization="IN", #IN=InstanceNormalization, BN=BatchNormalization, None
 				 l2_value=None, **kwargs):
-        			
+
+		# assert padding: checked on lbConv2D
+		# assert activation: checked on Activation
+		# assert normalization: checked on Normalization
+
 		super().__init__(**kwargs)
 		self.num_out_filters = num_out_filters
 		self.kernel_size = kernel_size
