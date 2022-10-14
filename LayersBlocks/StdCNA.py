@@ -31,7 +31,7 @@ class StdCNA(tf.keras.layers.Layer):
 		self.strides = strides
 		self.dilation_rate = dilation_rate
 		self.padding = padding
-		self.activation = activation,
+		self.activation = activation
 		self.normalization = normalization
 		self.l2_value = l2_value
 

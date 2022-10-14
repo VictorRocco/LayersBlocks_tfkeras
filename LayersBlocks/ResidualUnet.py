@@ -26,16 +26,14 @@ class ResidualUnet(tf.keras.layers.Layer):
 				 output_dropout=None,  # None or 0.xx
 				 l2_value=None, **kwargs):
 
-		assert function == "StdCNA", "function parameter not valid"
-		assert aggregation == "concatenate" or \
-			   aggregation == "add", \
-			"aggregation parameter not valid"
-		assert residual == True or \
-			   residual == False, \
-			"residual parameter not valid"
-		assert output_CSE == True or \
-			   output_CSE == False, \
-			"output_CSE parameter not valid"
+		if function not in ("StdCNA"):
+			raise ValueError("invalid argument: function = ", function)
+		if aggregation not in ("concatenate", "add"):
+			raise ValueError("invalid argument: aggregation = ", aggregation)
+		if residual not in (True, False):
+			raise ValueError("invalid argument: residual = ", residual)
+		if output_CSE not in (True, False):
+			raise ValueError("invalid argument: output_CSE = ", output_CSE)
 
 		super().__init__(**kwargs)
 		self.num_out_filters = num_out_filters

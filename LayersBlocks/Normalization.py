@@ -13,10 +13,9 @@ class Normalization(tf.keras.layers.Layer):
 
     def __init__(self, normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
                  **kwargs):
-        assert normalization == "IN" or \
-               normalization == "BN" or \
-               normalization == None, \
-               f"normalization parameter not valid: {normalization}"
+
+        if normalization not in ("IN", "BN", None):
+            raise ValueError("invalid argument: normalization = ", normalization)
 
         super().__init__(**kwargs)
         self.normalization = normalization

@@ -12,10 +12,9 @@ class Activation(tf.keras.layers.Layer):
 
 	def __init__(self, activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
 				 **kwargs):
-		assert activation == "LR010" or \
-			activation == "RELU" or \
-			activation == None, \
-			f"activation parameter not valid: {activation}"
+
+		if activation not in ("LR010", "RELU", None):
+			raise ValueError("invalid argument: activation = ", activation)
 
 		super().__init__(**kwargs)
 		self.activation = activation

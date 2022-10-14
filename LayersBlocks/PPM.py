@@ -31,10 +31,8 @@ class PPM(tf.keras.layers.Layer):
         # assert padding: checked on StdCNA
         # assert activation: checked on StdCNA
         # assert normalization: checked on StdCNA
-        assert output_mode == "as_list" or \
-               output_mode == "add" or \
-               output_mode == "concatenate", \
-            "output_mode parameter not valid"
+        if output_mode not in ("as_list", "add", "concatenate"):
+            raise ValueError("invalid argument: output_mode = ", output_mode)
 
         super().__init__(**kwargs)
         self.num_out_filters = num_out_filters
