@@ -15,7 +15,7 @@ class Activation(tf.keras.layers.Layer):
 		assert activation == "LR010" or \
 			activation == "RELU" or \
 			activation == None, \
-			"activation parameter not valid"
+			f"activation parameter not valid: {activation}"
 
 		super().__init__(**kwargs)
 		self.activation = activation

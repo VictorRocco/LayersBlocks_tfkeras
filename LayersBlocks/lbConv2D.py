@@ -32,7 +32,7 @@ class lbConv2D(tf.keras.layers.Layer):
                padding == "valid" or \
                padding == "symmetric" or \
                padding == "reflect", \
-            "padding parameter not valid"
+            f"padding parameter not valid: {padding}"
         # assert activation: checked on Activation
         # assert normalization: checked on Normalization
 

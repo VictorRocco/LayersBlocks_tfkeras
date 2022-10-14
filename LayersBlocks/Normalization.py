@@ -16,7 +16,7 @@ class Normalization(tf.keras.layers.Layer):
         assert normalization == "IN" or \
                normalization == "BN" or \
                normalization == None, \
-               "normalization parameter not valid"
+               f"normalization parameter not valid: {normalization}"
 
         super().__init__(**kwargs)
         self.normalization = normalization
