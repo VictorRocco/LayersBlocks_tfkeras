@@ -1,7 +1,5 @@
 #Channel-wise Squeeze and Excite block
 
-#TODO: use Activation
-
 # https://arxiv.org/abs/1709.01507 - official paper "Squeeze and Excitation Networks"
 # https://github.com/hujie-frank/SENet - official implementation "Squeeze and Excitation Networks"
 # https://arxiv.org/abs/1803.02579 - official paper
@@ -15,6 +13,7 @@ import tensorflow as tf
 from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
 from .lbConv2D import lbConv2D
+from .Activation import Activation
 
 @tf.keras.utils.register_keras_serializable()
 class CSE(tf.keras.layers.Layer):
@@ -22,6 +21,8 @@ class CSE(tf.keras.layers.Layer):
 	def __init__(self, activation="LR010", #LR010=LeakyReLU(0.10), RELU=ReLU, None
 				 num_out_filters=None, #None, num_out_filters
 				 l2_value=None, ratio=16, **kwargs):
+
+		#assert activation: checked on Activation
         			
 		super().__init__(**kwargs)
 		self.activation = activation
@@ -29,13 +30,7 @@ class CSE(tf.keras.layers.Layer):
 		self.l2_value = l2_value
 		self.ratio = ratio
 
-		if self.activation == "LR010":
-			self.f_activation = LeakyReLU(0.10)
-		elif self.activation == "RELU":
-			self.f_activation = ReLU()
-		else:
-			self.f_activation = None
-
+		self.f_activation = Activation(activation=self.activation)
 		self.f_gap = GlobalAveragePooling2D()
 		self.f_multiply = Multiply()
 
