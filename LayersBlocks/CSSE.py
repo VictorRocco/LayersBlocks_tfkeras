@@ -30,13 +30,6 @@ class CSSE(tf.keras.layers.Layer):
 		self.l2_value = l2_value
 		self.ratio = ratio
 
-		if self.activation == "LR010":
-			self.f_activation = LeakyReLU(0.10)
-		elif self.activation == "RELU":
-			self.f_activation = ReLU()
-		else:
-			self.f_activation = None
-
 		self.f_cse = CSE(activation=self.activation, num_out_filters=self.num_out_filters,
 						 l2_value=self.l2_value, ratio=self.ratio)
 		self.f_sse = SSE(l2_value=self.l2_value)
