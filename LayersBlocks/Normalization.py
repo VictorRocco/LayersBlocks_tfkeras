@@ -4,7 +4,6 @@
 
 import tensorflow as tf
 from tensorflow.keras.layers import *
-from tensorflow.keras.regularizers import l2
 from tensorflow_addons.layers import InstanceNormalization
 
 
@@ -38,7 +37,7 @@ class Normalization(tf.keras.layers.Layer):
     def call(self, X):
 
         Y = X
-        if self.f_normalization != None:
+        if self.f_normalization is not None:
             Y = self.f_normalization(Y)
         return Y
 

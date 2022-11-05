@@ -3,7 +3,6 @@
 
 import tensorflow as tf
 from tensorflow.keras.layers import *
-from tensorflow.keras.regularizers import l2
 
 from .lbConv2D import lbConv2D
 

@@ -110,7 +110,8 @@ class lbConv2D(tf.keras.layers.Layer):
                 pad_along_width - pad_left
             )  # amount of padding on the right
 
-            # print("pad_top", pad_top, "pad_bottom", pad_bottom, "pad_left", pad_left, "pad_right", pad_right)
+            # print("pad_top", pad_top, "pad_bottom", pad_bottom,
+            # "pad_left", pad_left, "pad_right", pad_right)
 
             self.tfpad_paddings = tf.constant(
                 [[0, 0], [pad_top, pad_bottom], [pad_left, pad_right], [0, 0]]

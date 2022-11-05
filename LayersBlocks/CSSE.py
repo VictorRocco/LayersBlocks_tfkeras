@@ -10,7 +10,6 @@
 
 import tensorflow as tf
 from tensorflow.keras.layers import *
-from tensorflow.keras.regularizers import l2
 
 from . import CSE, SSE
 

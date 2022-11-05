@@ -26,7 +26,6 @@
 
 import tensorflow as tf
 from tensorflow.keras.layers import *
-from tensorflow.keras.regularizers import l2
 
 from .CSE import CSE
 from .lbConv2D import lbConv2D
@@ -145,7 +144,7 @@ class ResidualUnet(tf.keras.layers.Layer):
             )
 
         # Output
-        if self.residual == True:
+        if self.residual is True:
             self.f_output_add = Add()  # Residual Add
 
         if self.output_CSE is not None:
@@ -208,7 +207,7 @@ class ResidualUnet(tf.keras.layers.Layer):
 
         # Output
 
-        if self.residual == True:
+        if self.residual is True:
             # Si es necesario ajusto la cantidad de filtros finales para poder hacer el Residual ADD
             if self.num_out_filters != self.input_channels:
                 Y = self.f_output_add([self.f_output_conv2d_num_filters(X), Y])

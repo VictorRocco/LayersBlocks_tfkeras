@@ -8,11 +8,7 @@
 
 import tensorflow as tf
 from tensorflow.keras.layers import *
-from tensorflow.keras.regularizers import l2
-from tensorflow_addons.layers import InstanceNormalization
 
-from .Activation import Activation
-from .Normalization import Normalization
 from .StdCNA import StdCNA
 
 
@@ -93,8 +89,8 @@ class ASPP(tf.keras.layers.Layer):
         for rate in self.aspp_rates:
             aspp_operation = self.f_stdcna_by_rate[rate](Y)
             aspp_operations_by_rate.append(aspp_operation)
-            # print("in", X.shape, "out", aspp_operation.shape, "kernel", self.kernel_size, "strides", self.strides,
-            #      "rate", rate, flush=True)
+            # print("in", X.shape, "out", aspp_operation.shape, "kernel", self.kernel_size,
+            # "strides", self.strides, "rate", rate, flush=True)
 
         if self.f_final_operation == "residual_add":
             # Si es necesario ajusto la cantidad de filtros finales para poder hacer el Residual ADD
@@ -103,7 +99,7 @@ class ASPP(tf.keras.layers.Layer):
             else:
                 aspp_operations_by_rate.append(X)
 
-        if self.f_final_operation != None:
+        if self.f_final_operation is not None:
             Y = self.f_final_operation(aspp_operations_by_rate)
         else:
             Y = aspp_operations_by_rate

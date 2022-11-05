@@ -11,8 +11,6 @@
 
 import tensorflow as tf
 from tensorflow.keras.layers import *
-from tensorflow.keras.regularizers import l2
-from tensorflow_addons.layers import InstanceNormalization
 
 from .StdCNA import StdCNA
 
@@ -93,7 +91,7 @@ class PPM(tf.keras.layers.Layer):
             Y = self.f_fnc[rate](Y)
             Y = self.f_upsample[rate](Y)
             ppm_operations_by_rate.append(Y)
-        if self.f_final_operation != None:
+        if self.f_final_operation is not None:
             Y = self.f_final_operation(ppm_operations_by_rate)
         else:
             Y = ppm_operations_by_rate

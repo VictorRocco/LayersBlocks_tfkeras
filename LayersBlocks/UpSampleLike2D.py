@@ -27,11 +27,11 @@ class UpSampleLike2D(tf.keras.layers.Layer):
         _upsampling_factor_H = self.target_spatial_size[0] / self._input_H
         _upsampling_factor_W = self.target_spatial_size[1] / self._input_W
 
-        if _upsampling_factor_H.is_integer() == False:
+        if _upsampling_factor_H.is_integer() is False:
             raise ValueError(
                 "upsampling factor H is not integer:", _upsampling_factor_H
             )
-        if _upsampling_factor_W.is_integer() == False:
+        if _upsampling_factor_W.is_integer() is False:
             raise ValueError(
                 "upsampling factor W is not integer:", _upsampling_factor_W
             )
