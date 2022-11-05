@@ -15,30 +15,35 @@ from tensorflow.keras.regularizers import l2
 
 @tf.keras.utils.register_keras_serializable()
 class SSE(tf.keras.layers.Layer):
+    def __init__(self, l2_value=None, **kwargs):
 
-	def __init__(self, l2_value=None, **kwargs):
-        			
-		super().__init__(**kwargs)
-		self.l2_value = l2_value
+        super().__init__(**kwargs)
+        self.l2_value = l2_value
 
-		self.f_sse = Conv2D(1, (1, 1), activation='sigmoid',
-							use_bias=False, kernel_initializer='he_normal',
-							kernel_regularizer=l2(self.l2_value), bias_regularizer=l2(self.l2_value))
+        self.f_sse = Conv2D(
+            1,
+            (1, 1),
+            activation="sigmoid",
+            use_bias=False,
+            kernel_initializer="he_normal",
+            kernel_regularizer=l2(self.l2_value),
+            bias_regularizer=l2(self.l2_value),
+        )
 
-		self.f_multiply = Multiply()
+        self.f_multiply = Multiply()
 
-	def call(self, X):
+    def call(self, X):
 
-		# Squeeze operation
-		Y = self.f_sse(X)
+        # Squeeze operation
+        Y = self.f_sse(X)
 
-		# Excitation operation
-		Y = self.f_multiply([X, Y])
+        # Excitation operation
+        Y = self.f_multiply([X, Y])
 
-		return Y
+        return Y
 
-	def get_config(self):
+    def get_config(self):
 
-		config = super().get_config()
-		config["l2_value"] = self.l2_value
-		return config
+        config = super().get_config()
+        config["l2_value"] = self.l2_value
+        return config

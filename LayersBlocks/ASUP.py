@@ -14,13 +14,18 @@ from .StdCNA import StdCNA
 
 @tf.keras.utils.register_keras_serializable()
 class ASUP(tf.keras.layers.Layer):
-
-    def __init__(self, num_out_filters, asup_rates=[1, 2, 4, 8],
-                 kernel_size=(3, 3), strides=(1, 1),
-                 padding="symmetric", # same, valid, symmetric, reflect
-                 activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
-                 normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-                 l2_value=None, **kwargs):
+    def __init__(
+        self,
+        num_out_filters,
+        asup_rates=[1, 2, 4, 8],
+        kernel_size=(3, 3),
+        strides=(1, 1),
+        padding="symmetric",  # same, valid, symmetric, reflect
+        activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+        normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
+        l2_value=None,
+        **kwargs
+    ):
 
         # assert padding: checked on StdCNA
         # assert activation: checked on StdCNA
@@ -39,11 +44,16 @@ class ASUP(tf.keras.layers.Layer):
         self.f_fpa = {}
         self.f_add = {}
         for rate in self.asup_rates:
-            self.f_fpa[rate] = StdCNA(num_out_filters=self.num_out_filters,
-                                      kernel_size=self.kernel_size,
-                                      strides=self.strides, dilation_rate=rate,
-                                      padding=self.padding, activation=self.activation,
-                                      normalization=self.normalization, l2_value=self.l2_value)
+            self.f_fpa[rate] = StdCNA(
+                num_out_filters=self.num_out_filters,
+                kernel_size=self.kernel_size,
+                strides=self.strides,
+                dilation_rate=rate,
+                padding=self.padding,
+                activation=self.activation,
+                normalization=self.normalization,
+                l2_value=self.l2_value,
+            )
             self.f_add[rate] = Add()
 
     def call(self, X):

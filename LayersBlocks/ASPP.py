@@ -18,14 +18,19 @@ from .StdCNA import StdCNA
 
 @tf.keras.utils.register_keras_serializable()
 class ASPP(tf.keras.layers.Layer):
-
-    def __init__(self, num_out_filters, aspp_rates=[2, 4, 8],
-                 kernel_size=(3, 3), strides=(1, 1),
-                 padding="symmetric", # same, valid, symmetric, reflect
-                 activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
-                 normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-                 output_mode="as_list", # as_list / residual_add / add / concatenate
-                 l2_value=None, **kwargs):
+    def __init__(
+        self,
+        num_out_filters,
+        aspp_rates=[2, 4, 8],
+        kernel_size=(3, 3),
+        strides=(1, 1),
+        padding="symmetric",  # same, valid, symmetric, reflect
+        activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+        normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
+        output_mode="as_list",  # as_list / residual_add / add / concatenate
+        l2_value=None,
+        **kwargs
+    ):
 
         # assert padding: checked on StdCNA
         # assert activation: checked on StdCNA
@@ -46,9 +51,15 @@ class ASPP(tf.keras.layers.Layer):
 
         self.f_stdcna_by_rate = {}
         for rate in self.aspp_rates:
-            self.f_stdcna_by_rate[rate] = StdCNA(num_out_filters=self.num_out_filters, kernel_size=self.kernel_size,
-                                                 strides=self.strides, dilation_rate=(rate, rate),
-                                                 padding=self.padding, activation=self.activation, l2_value=self.l2_value)
+            self.f_stdcna_by_rate[rate] = StdCNA(
+                num_out_filters=self.num_out_filters,
+                kernel_size=self.kernel_size,
+                strides=self.strides,
+                dilation_rate=(rate, rate),
+                padding=self.padding,
+                activation=self.activation,
+                l2_value=self.l2_value,
+            )
 
         if self.output_mode == "residual_add":
             self.f_final_operation = Add()
@@ -59,14 +70,21 @@ class ASPP(tf.keras.layers.Layer):
         elif self.output_mode == "as_list":
             self.f_final_operation = None
         else:
-            raise ValueError('output_mode should be "as_list", "residual_add", "add" or "concatenate", received: ' +str(self.output_mode) +'.')
+            raise ValueError(
+                'output_mode should be "as_list", "residual_add", "add" or "concatenate", received: '
+                + str(self.output_mode)
+                + "."
+            )
+
     def build(self, input_shape):
 
         # Si es necesario ajusto la cantidad de filtros finales
         # para poder hacer el Residual ADD (sin activacion)
         self.input_channels = input_shape[-1]
         if self.num_out_filters != self.input_channels:
-            self.f_output_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1))
+            self.f_output_conv2d_num_filters = Conv2D(
+                filters=self.num_out_filters, kernel_size=(1, 1)
+            )
 
     def call(self, X):
 
@@ -75,7 +93,7 @@ class ASPP(tf.keras.layers.Layer):
         for rate in self.aspp_rates:
             aspp_operation = self.f_stdcna_by_rate[rate](Y)
             aspp_operations_by_rate.append(aspp_operation)
-            #print("in", X.shape, "out", aspp_operation.shape, "kernel", self.kernel_size, "strides", self.strides,
+            # print("in", X.shape, "out", aspp_operation.shape, "kernel", self.kernel_size, "strides", self.strides,
             #      "rate", rate, flush=True)
 
         if self.f_final_operation == "residual_add":

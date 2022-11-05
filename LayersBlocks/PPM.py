@@ -19,14 +19,20 @@ from .StdCNA import StdCNA
 
 @tf.keras.utils.register_keras_serializable()
 class PPM(tf.keras.layers.Layer):
-
-    def __init__(self, num_out_filters, ppm_rates=[2, 4, 8],
-                 kernel_size=(3, 3), strides=(1, 1), dilation_rate=(1, 1),
-                 padding="symmetric", # same, valid, symmetric, reflect
-                 activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
-                 normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-                 output_mode="as_list", # as_list / add / concatenate
-                 l2_value=None, **kwargs):
+    def __init__(
+        self,
+        num_out_filters,
+        ppm_rates=[2, 4, 8],
+        kernel_size=(3, 3),
+        strides=(1, 1),
+        dilation_rate=(1, 1),
+        padding="symmetric",  # same, valid, symmetric, reflect
+        activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+        normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
+        output_mode="as_list",  # as_list / add / concatenate
+        l2_value=None,
+        **kwargs
+    ):
 
         # assert padding: checked on StdCNA
         # assert activation: checked on StdCNA
@@ -52,12 +58,19 @@ class PPM(tf.keras.layers.Layer):
 
         for rate in self.ppm_rates:
             self.f_avg_pool_2d[rate] = AveragePooling2D(pool_size=(rate, rate))
-            self.f_fnc[rate] = StdCNA(num_out_filters=self.num_out_filters,
-                                      kernel_size=self.kernel_size,
-                                      strides=self.strides, dilation_rate=self.dilation_rate,
-                                      padding=self.padding, activation=self.activation,
-                                      normalization=self.normalization, l2_value=self.l2_value)
-            self.f_upsample[rate] = UpSampling2D(size=(rate, rate), interpolation="bilinear")
+            self.f_fnc[rate] = StdCNA(
+                num_out_filters=self.num_out_filters,
+                kernel_size=self.kernel_size,
+                strides=self.strides,
+                dilation_rate=self.dilation_rate,
+                padding=self.padding,
+                activation=self.activation,
+                normalization=self.normalization,
+                l2_value=self.l2_value,
+            )
+            self.f_upsample[rate] = UpSampling2D(
+                size=(rate, rate), interpolation="bilinear"
+            )
 
         if self.output_mode == "add":
             self.f_final_operation = Add()
@@ -66,7 +79,11 @@ class PPM(tf.keras.layers.Layer):
         elif self.output_mode == "as_list":
             self.f_final_operation = None
         else:
-            raise ValueError('output_mode should be "as_list", "add" or "concatenate", received: ' +str(self.output_mode) +'.')
+            raise ValueError(
+                'output_mode should be "as_list", "add" or "concatenate", received: '
+                + str(self.output_mode)
+                + "."
+            )
 
     def call(self, X):
 
