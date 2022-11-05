@@ -2,11 +2,11 @@
 # https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
 
 import tensorflow as tf
-
 from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
 
 from .lbConv2D import lbConv2D
+
 
 @tf.keras.utils.register_keras_serializable()
 class ResidualConv2D(tf.keras.layers.Layer):

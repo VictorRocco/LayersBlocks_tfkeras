@@ -2,12 +2,12 @@
 # https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
 
 import tensorflow as tf
-
 from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
 from tensorflow_addons.layers import InstanceNormalization
 
 from .FullPreActivation import FullPreActivation
+
 
 @tf.keras.utils.register_keras_serializable()
 class ResidualFPA(tf.keras.layers.Layer):

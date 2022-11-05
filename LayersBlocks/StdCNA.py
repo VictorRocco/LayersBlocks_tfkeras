@@ -2,14 +2,14 @@
 # https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
 
 import tensorflow as tf
-
 from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
 from tensorflow_addons.layers import InstanceNormalization
 
-from .Normalization import Normalization
 from .Activation import Activation
 from .lbConv2D import lbConv2D
+from .Normalization import Normalization
+
 
 @tf.keras.utils.register_keras_serializable()
 class StdCNA(tf.keras.layers.Layer):

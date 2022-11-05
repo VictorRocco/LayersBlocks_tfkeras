@@ -3,10 +3,10 @@
 # ========================================
 
 import tensorflow as tf
-
 from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
 from tensorflow_addons.layers import InstanceNormalization
+
 
 @tf.keras.utils.register_keras_serializable()
 class Normalization(tf.keras.layers.Layer):

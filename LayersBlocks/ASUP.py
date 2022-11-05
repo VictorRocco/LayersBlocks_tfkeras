@@ -5,12 +5,12 @@
 # (https://github.com/xuebinqin/U-2-Net/blob/master/model/u2net.py)
 
 import tensorflow as tf
-
 from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
 from tensorflow_addons.layers import InstanceNormalization
 
 from .StdCNA import StdCNA
+
 
 @tf.keras.utils.register_keras_serializable()
 class ASUP(tf.keras.layers.Layer):

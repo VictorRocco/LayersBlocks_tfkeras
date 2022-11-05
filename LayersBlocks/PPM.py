@@ -10,12 +10,12 @@
 # TODO: add residual_add output_mode option
 
 import tensorflow as tf
-
 from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
 from tensorflow_addons.layers import InstanceNormalization
 
 from .StdCNA import StdCNA
+
 
 @tf.keras.utils.register_keras_serializable()
 class PPM(tf.keras.layers.Layer):

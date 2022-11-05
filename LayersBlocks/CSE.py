@@ -9,11 +9,12 @@
 # https://blog.paperspace.com/channel-attention-squeeze-and-excitation-networks/
 
 import tensorflow as tf
-
 from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
-from .lbConv2D import lbConv2D
+
 from .Activation import Activation
+from .lbConv2D import lbConv2D
+
 
 @tf.keras.utils.register_keras_serializable()
 class CSE(tf.keras.layers.Layer):

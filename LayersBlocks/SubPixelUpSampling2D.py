@@ -16,9 +16,11 @@
 # Base code:
 # 	https://github.com/fengwang/subpixel_conv2d/blob/master/subpixel_conv2d.py
 
+import math
+
 import tensorflow as tf
 from tensorflow.keras.layers import *
-import math
+
 
 @tf.keras.utils.register_keras_serializable()
 class SubPixelUpSampling2D(tf.keras.layers.Layer):

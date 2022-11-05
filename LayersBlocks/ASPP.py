@@ -7,14 +7,14 @@
 # https://arxiv.org/pdf/1606.00915v2.pdf
 
 import tensorflow as tf
-
 from tensorflow.keras.layers import *
 from tensorflow.keras.regularizers import l2
 from tensorflow_addons.layers import InstanceNormalization
 
-from .Normalization import Normalization
 from .Activation import Activation
+from .Normalization import Normalization
 from .StdCNA import StdCNA
+
 
 @tf.keras.utils.register_keras_serializable()
 class ASPP(tf.keras.layers.Layer):
