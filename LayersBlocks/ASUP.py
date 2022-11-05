@@ -1,8 +1,12 @@
-# ==========================================
-# === Atrous Spatial UNET Pooling Module ===
-# ==========================================
-# Simil to class RSU4F in U2NET.
-# (https://github.com/xuebinqin/U-2-Net/blob/master/model/u2net.py)
+"""
+==========================================
+=== Atrous Spatial UNET Pooling Module ===
+==========================================
+
+Simil to class RSU4F in U2NET.
+
+https://github.com/xuebinqin/U-2-Net/blob/master/model/u2net.py
+"""
 
 import tensorflow as tf
 from tensorflow.keras.layers import *

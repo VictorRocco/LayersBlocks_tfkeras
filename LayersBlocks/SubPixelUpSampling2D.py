@@ -1,20 +1,23 @@
-# ==============================
-# === SubPixel UpSampling 2D ===
-# ==============================
-# Up sampling layer from (N, H, W, C) to (N, H*factor, W*factor, C/(factor**2))
-# If number of channels C < (factor**2), we compute SubPixelUpSampling with
-# available channels and then UpSampling2D with the remaining scale.
-# Example: scale = 16 but we have 64 channels, then max scale is 8, so we compute
-# SubPixel upsampling with factor 8 and then UpSampling2D with scale 2,
-# So we get the total scale of 16 (8*2=16).
+""""
+==============================
+=== SubPixel UpSampling 2D ===
+==============================
 
-# REFERENCE:
-# Paper:
-# 	Real-Time Single Image and Video Super-Resolution Using an Efficient
-#   Sub-Pixel Convolutional Neural Network Shi et Al.
-#   https://arxiv.org/abs/1609.05158
-# Base code:
-# 	https://github.com/fengwang/subpixel_conv2d/blob/master/subpixel_conv2d.py
+Up sampling layer from (N, H, W, C) to (N, H*factor, W*factor, C/(factor**2))
+If number of channels C < (factor**2), we compute SubPixelUpSampling with
+available channels and then UpSampling2D with the remaining scale.
+Example: scale = 16 but we have 64 channels, then max scale is 8, so we compute
+SubPixel upsampling with factor 8 and then UpSampling2D with scale 2,
+So we get the total scale of 16 (8*2=16).
+
+REFERENCE:
+Paper:
+  Real-Time Single Image and Video Super-Resolution Using an Efficient
+  Sub-Pixel Convolutional Neural Network Shi et Al.
+  https://arxiv.org/abs/1609.05158
+Base code:
+  https://github.com/fengwang/subpixel_conv2d/blob/master/subpixel_conv2d.py
+"""
 
 import tensorflow as tf
 from tensorflow.keras.layers import *

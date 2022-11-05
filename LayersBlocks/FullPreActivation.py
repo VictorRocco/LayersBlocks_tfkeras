@@ -1,6 +1,10 @@
-# Full Pre Activation sequence: (Normalization) + (Activation) + Conv2d
-# https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
+"""
+=============================================================================
+=== Full Pre Activation sequence: (Normalization) + (Activation) + Conv2d ===
+=============================================================================
 
+https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
+"""
 import tensorflow as tf
 from tensorflow.keras.layers import *
 

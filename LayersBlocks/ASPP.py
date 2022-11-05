@@ -1,10 +1,13 @@
-# =============================================
-# === Atrous Spatial Pyramid Pooling Module ===
-# =============================================
-# Simil to "DeepLab: Semantic Image Segmentation with Deep Convolutional Nets,
-# Atrous Convolution, and Fully Connected CRFs"
-# Use shared FullPreActivation
-# https://arxiv.org/pdf/1606.00915v2.pdf
+"""
+=============================================
+=== Atrous Spatial Pyramid Pooling Module ===
+=============================================
+
+Simil to "DeepLab: Semantic Image Segmentation with Deep Convolutional Nets,
+Atrous Convolution, and Fully Connected CRFs"
+
+https://arxiv.org/pdf/1606.00915v2.pdf
+"""
 
 import tensorflow as tf
 from tensorflow.keras.layers import *

@@ -1,13 +1,17 @@
-# ==============================
-# === Pyramid Pooling Module ===
-# ==============================
-# Simil to Pyramid Scene Parsing Network by Hengshuang Zhao et al 2017
-# Uses Add instead of Concatenate 1/N filters, and kernel size 3x3 instead of 1x1
-# https://arxiv.org/abs/1612.01105
-# https://github.com/hszhao/PSPNet
-# https://github.com/hszhao/semseg/blob/master/model/pspnet.py
+"""
+==============================
+=== Pyramid Pooling Module ===
+==============================
 
-# TODO: add residual_add output_mode option
+Simil to Pyramid Scene Parsing Network by Hengshuang Zhao et al 2017
+Uses Add instead of Concatenate 1/N filters, and kernel size 3x3 instead of 1x1
+
+https://arxiv.org/abs/1612.01105
+https://github.com/hszhao/PSPNet
+https://github.com/hszhao/semseg/blob/master/model/pspnet.py
+
+TODO: add residual_add output_mode option
+"""
 
 import tensorflow as tf
 from tensorflow.keras.layers import *

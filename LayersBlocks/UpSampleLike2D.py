@@ -1,8 +1,11 @@
-# =========================
-# === Up Sample Like 2D ===
-# =========================
-# Up sampling layer from (N, H1, W1, C1) to (N, H2, W2, C1)
-# Input tensor up sampled to have the same spatial size as target.
+"""
+=========================
+=== Up Sample Like 2D ===
+=========================
+
+Up sampling layer from (N, H1, W1, C1) to (N, H2, W2, C1)
+Input tensor up sampled to have the same spatial size as target.
+"""
 
 import tensorflow as tf
 from tensorflow.keras.layers import *

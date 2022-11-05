@@ -1,6 +1,8 @@
-# ========================================
-# === selected Activation by parameter ===
-# ========================================
+"""
+========================================
+=== selected Activation by parameter ===
+========================================
+"""
 
 import tensorflow as tf
 from tensorflow.keras.layers import *

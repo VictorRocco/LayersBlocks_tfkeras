@@ -1,15 +1,17 @@
-# ===================================================
-# === Conv2D, optionally with alternative padding ===
-# === (reflect, symmetric, constant) ================
-# ===================================================
+"""
+===================================================
+=== Conv2D, optionally with alternative padding ===
+=== (reflect, symmetric, constant) ================
+===================================================
 
-# sources
-# - How to keep the shape of input and output same when dilation conv?
-#   https://discuss.pytorch.org/t/how-to-keep-the-shape-of-input-and-output-same-when-dilation-conv/14338
-# - Implementing 'SAME' and 'VALID' padding of Tensorflow in Python
-#   https://mmuratarat.github.io/2019-01-17/implementing-padding-schemes-of-tensorflow-in-python
-# - Convolution Visualizer
-#   https://ezyang.github.io/convolution-visualizer/index.html
+Sources:
+- How to keep the shape of input and output same when dilation conv?
+  https://discuss.pytorch.org/t/how-to-keep-the-shape-of-input-and-output-same-when-dilation-conv/14338
+- Implementing 'SAME' and 'VALID' padding of Tensorflow in Python
+  https://mmuratarat.github.io/2019-01-17/implementing-padding-schemes-of-tensorflow-in-python
+- Convolution Visualizer
+  https://ezyang.github.io/convolution-visualizer/index.html
+"""
 
 import tensorflow as tf
 from tensorflow.keras.layers import *

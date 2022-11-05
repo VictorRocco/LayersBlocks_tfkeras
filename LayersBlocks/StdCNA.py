@@ -1,5 +1,11 @@
-# Standard Conv2d + (Normalization) + (Activation)
-# https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
+"""
+========================================================
+=== Standard Conv2d + (Normalization) + (Activation) ===
+========================================================
+
+Source Code:
+- https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
+"""
 
 import tensorflow as tf
 from tensorflow.keras.layers import *

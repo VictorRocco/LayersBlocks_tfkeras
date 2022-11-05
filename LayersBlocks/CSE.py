@@ -1,12 +1,17 @@
-# Channel-wise Squeeze and Excite block
+"""
+=============================================
+=== Channel-wise Squeeze and Excite block ===
+=============================================
 
-# https://arxiv.org/abs/1709.01507 - official paper "Squeeze and Excitation Networks"
-# https://github.com/hujie-frank/SENet - official implementation "Squeeze and Excitation Networks"
-# https://arxiv.org/abs/1803.02579 - official paper
-# 		"Concurrent Spatial and Channel Squeeze & Excitation in Fully Convolutional Networks"
-# https://github.com/titu1994/keras-squeeze-excite-network/blob/master/se.py
-# https://github.com/RayXie29/SENet_Keras
-# https://blog.paperspace.com/channel-attention-squeeze-and-excitation-networks/
+https://arxiv.org/abs/1803.02579 - official paper
+"Concurrent Spatial and Channel Squeeze & Excitation in Fully Convolutional Networks"
+
+https://arxiv.org/abs/1709.01507 - official paper "Squeeze and Excitation Networks"
+https://github.com/hujie-frank/SENet - official implementation "Squeeze and Excitation Networks"
+https://github.com/titu1994/keras-squeeze-excite-network/blob/master/se.py
+https://github.com/RayXie29/SENet_Keras
+https://blog.paperspace.com/channel-attention-squeeze-and-excitation-networks/
+"""
 
 import tensorflow as tf
 from tensorflow.keras.layers import *

@@ -1,5 +1,10 @@
-# Residual block using Full Pre Activation.
-# https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
+""""
+================================================
+=== Residual block using Full Pre Activation ===
+================================================
+
+https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
+"""
 
 import tensorflow as tf
 from tensorflow.keras.layers import *

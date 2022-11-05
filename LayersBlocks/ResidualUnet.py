@@ -1,28 +1,30 @@
-# =============================================
-# === Residual Unet similar to RSU in U2Net ===
-# =============================================
+"""
+=============================================
+=== Residual Unet similar to RSU in U2Net ===
+=============================================
 
-# num_layers parameter
-# ===================
-# Set the number of layers (included both, the input layer and the bottleneck layer)
-# Example: 6 layers = 5 layers (included the input layer) + bottleneck
-# Be aware, parameter num_layers sets the minimum image shape in bottleneck
-# You need to know the minimum image shape you want and then calculate num_layers
-# Also in bottleneck, an additional dilated (2,2) lbConv2D is applied
-# It is NOT recommended to use a minimum shape less than 8x8
-# Formulae: minimum_shape = input_shape / 2^(num_layers-1)
-# Example: input shape 256x256, num_layers = 6 -> minimum_shape = 256 / 2^(6-1) = 256 / 32 = 8
-# Layer 1 (encoder)(same as input) = 256x256
-# Layer 2 (encoder) = 128x128
-# Layer 3 (encoder) = 64x64
-# Layer 4 (encoder) = 32x32
-# Layer 5 (encoder) = 16x16
-# Layer 6 (bottleneck) = 8x8
-# Additional (bottelenck): dilated (2,2) lbConv2D on 8x8
+num_layers parameter
+===================
+Set the number of layers (included both, the input layer and the bottleneck layer)
+Example: 6 layers = 5 layers (included the input layer) + bottleneck
+Be aware, parameter num_layers sets the minimum image shape in bottleneck
+You need to know the minimum image shape you want and then calculate num_layers
+Also in bottleneck, an additional dilated (2,2) lbConv2D is applied
+It is NOT recommended to use a minimum shape less than 8x8
+Formulae: minimum_shape = input_shape / 2^(num_layers-1)
+Example: input shape 256x256, num_layers = 6 -> minimum_shape = 256 / 2^(6-1) = 256 / 32 = 8
+Layer 1 (encoder)(same as input) = 256x256
+Layer 2 (encoder) = 128x128
+Layer 3 (encoder) = 64x64
+Layer 4 (encoder) = 32x32
+Layer 5 (encoder) = 16x16
+Layer 6 (bottleneck) = 8x8
+Additional (bottelenck): dilated (2,2) lbConv2D on 8x8
 
-# sources:
-# https://github.com/xuebinqin/U-2-Net
-# https://arxiv.org/pdf/2005.09007.pdf
+Sources:
+- https://github.com/xuebinqin/U-2-Net
+- https://arxiv.org/pdf/2005.09007.pdf
+"""
 
 import tensorflow as tf
 from tensorflow.keras.layers import *
