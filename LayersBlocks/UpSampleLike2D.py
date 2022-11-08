@@ -8,7 +8,7 @@ Input tensor up sampled to have the same spatial size as target.
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import UpSampling2D
 
 
 @tf.keras.utils.register_keras_serializable()

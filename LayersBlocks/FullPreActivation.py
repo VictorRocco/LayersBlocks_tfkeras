@@ -6,7 +6,6 @@
 https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca15d6ec
 """
 import tensorflow as tf
-from tensorflow.keras.layers import *
 
 from .Activation import Activation
 from .lbConv2D import lbConv2D

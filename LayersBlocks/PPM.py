@@ -14,7 +14,7 @@ TODO: add residual_add output_mode option
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import Add, AveragePooling2D, Concatenate, UpSampling2D
 
 from .StdCNA import StdCNA
 

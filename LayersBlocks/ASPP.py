@@ -10,7 +10,7 @@ https://arxiv.org/pdf/1606.00915v2.pdf
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import Add, Concatenate, Conv2D
 
 from .StdCNA import StdCNA
 

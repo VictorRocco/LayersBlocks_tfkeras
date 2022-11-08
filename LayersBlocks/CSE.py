@@ -14,7 +14,7 @@ https://blog.paperspace.com/channel-attention-squeeze-and-excitation-networks/
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Multiply
 from tensorflow.keras.regularizers import l2
 
 from .Activation import Activation

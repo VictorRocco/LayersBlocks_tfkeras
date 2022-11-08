@@ -5,7 +5,7 @@
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import LeakyReLU, ReLU
 
 
 @tf.keras.utils.register_keras_serializable()

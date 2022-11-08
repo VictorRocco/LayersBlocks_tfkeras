@@ -5,7 +5,7 @@
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import BatchNormalization
 from tensorflow_addons.layers import InstanceNormalization
 
 

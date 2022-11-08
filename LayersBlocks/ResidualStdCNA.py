@@ -7,7 +7,7 @@ https://towardsdatascience.com/residual-blocks-building-blocks-of-resnet-fd90ca1
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import Add, Conv2D
 
 from .StdCNA import StdCNA
 

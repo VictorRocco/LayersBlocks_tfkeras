@@ -20,7 +20,7 @@ Base code:
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import UpSampling2D
 
 
 @tf.keras.utils.register_keras_serializable()

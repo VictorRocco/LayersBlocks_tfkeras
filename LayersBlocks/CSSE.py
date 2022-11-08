@@ -14,7 +14,7 @@ https://blog.paperspace.com/channel-attention-squeeze-and-excitation-networks/
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import Add
 
 from . import CSE, SSE
 

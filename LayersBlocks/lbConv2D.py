@@ -14,7 +14,7 @@ Sources:
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import Conv2D
 from tensorflow.keras.regularizers import l2
 
 from .Activation import Activation

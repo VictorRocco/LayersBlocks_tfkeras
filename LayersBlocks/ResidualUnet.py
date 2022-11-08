@@ -27,7 +27,7 @@ Sources:
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import Add, Concatenate, Dropout, MaxPool2D, UpSampling2D
 
 from .CSE import CSE
 from .lbConv2D import lbConv2D

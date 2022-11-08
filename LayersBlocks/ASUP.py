@@ -9,7 +9,7 @@ https://github.com/xuebinqin/U-2-Net/blob/master/model/u2net.py
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import *
+from tensorflow.keras.layers import Add
 
 from .StdCNA import StdCNA
 
