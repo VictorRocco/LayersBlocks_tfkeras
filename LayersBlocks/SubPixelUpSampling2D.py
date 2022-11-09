@@ -97,7 +97,6 @@ class SubPixelUpSampling2D(tf.keras.layers.Layer):
                 )
 
     def compute_output_shape(self, input_shape):
-        self._channels
 
         if self.upsampling_factor == 1:
             output_shape = input_shape

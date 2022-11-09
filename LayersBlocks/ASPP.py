@@ -88,7 +88,7 @@ class ASPP(tf.keras.layers.Layer):
     def call(self, X):
 
         Y = X
-        aspp_operations_by_rate = list()
+        aspp_operations_by_rate = []
         for rate in self.aspp_rates:
             aspp_operation = self.f_stdcna_by_rate[rate](Y)
             aspp_operations_by_rate.append(aspp_operation)

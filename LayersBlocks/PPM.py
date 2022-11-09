@@ -89,7 +89,7 @@ class PPM(tf.keras.layers.Layer):
 
     def call(self, X):
 
-        ppm_operations_by_rate = list()
+        ppm_operations_by_rate = []
         for rate in self.ppm_rates:
             Y = self.f_avg_pool_2d[rate](X)
             Y = self.f_fnc[rate](Y)

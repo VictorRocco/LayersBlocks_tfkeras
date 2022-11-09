@@ -75,8 +75,8 @@ class lbConv2D(tf.keras.layers.Layer):
 
             # NOTE: "original" works when dilation = 1, if dilatio != 1 it does'nt work
             # I fixed dilation != 1 with:
-            # 1) https://mmuratarat.github.io/2019-01-17/implementing-padding-schemes-of-tensorflow-in-python
-            # 2) https://ezyang.github.io/convolution-visualizer/index.html
+            # 1) mmuratarat.github.io/2019-01-17/implementing-padding-schemes-of-tensorflow-in-python
+            # 2) ezyang.github.io/convolution-visualizer/index.html
             # The visualizer shows padding = 2 * dilation when: (input = N * 8) and Kernel = 3 (odd)
             # Also the correct formulae is )not implemented here, but verified with convolution visualizer):
             # padding (each side) = [(input-1)*stride -input +kernel + (kernel-1)*(dil-1)] / 2
@@ -103,7 +103,8 @@ class lbConv2D(tf.keras.layers.Layer):
                 pad_along_width = tf.math.maximum(
                     kernel_w - (input_w % stride_w), 0
                 )  # original
-                # pad_along_width = tf.math.maximum(kernel_w - (input_w % stride_w), 2 * dilation_w) #VNR
+                # pad_along_width =
+                #     tf.math.maximum(kernel_w - (input_w % stride_w), 2 * dilation_w) #VNR
 
             pad_top = int(pad_along_height // 2)  # amount padding on the top
             pad_bottom = int(pad_along_height - pad_top)  # amount padding on the bottom
