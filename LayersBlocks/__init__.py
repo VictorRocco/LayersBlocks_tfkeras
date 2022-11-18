@@ -4,6 +4,7 @@ from .ASUP import ASUP
 from .CSE import CSE
 from .CSSE import CSSE
 from .FullPreActivation import FullPreActivation
+from .lbConv2D import lbConv2D
 from .Normalization import Normalization
 from .PPM import PPM
 from .ResidualConv2D import ResidualConv2D
