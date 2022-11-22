@@ -16,18 +16,18 @@ from .Normalization import Normalization
 
 @tf.keras.utils.register_keras_serializable()
 class StdCNA(tf.keras.layers.Layer):
+
     def __init__(
-        self,
-        num_out_filters,
-        kernel_size=(3, 3),
-        strides=(1, 1),
-        dilation_rate=(1, 1),
-        padding="symmetric",  # same, valid, symmetric, reflect
-        activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
-        normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-        l2_value=None,
-        **kwargs
-    ):
+            self,
+            num_out_filters,
+            kernel_size=(3, 3),
+            strides=(1, 1),
+            dilation_rate=(1, 1),
+            padding="symmetric",  # same, valid, symmetric, reflect
+            activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+            normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
+            l2_value=None,
+            **kwargs):
 
         # assert padding: checked on lbConv2D
         # assert activation: checked on Activation

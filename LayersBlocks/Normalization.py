@@ -11,11 +11,11 @@ from tensorflow_addons.layers import InstanceNormalization
 
 @tf.keras.utils.register_keras_serializable()
 class Normalization(tf.keras.layers.Layer):
+
     def __init__(
-        self,
-        normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-        **kwargs
-    ):
+            self,
+            normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
+            **kwargs):
 
         if normalization not in ("IN", "BN", None):
             raise ValueError("invalid argument: normalization = ", normalization)

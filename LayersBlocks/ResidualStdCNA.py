@@ -14,18 +14,18 @@ from .StdCNA import StdCNA
 
 @tf.keras.utils.register_keras_serializable()
 class ResidualStdCNA(tf.keras.layers.Layer):
+
     def __init__(
-        self,
-        num_out_filters,
-        kernel_size=(3, 3),
-        strides=(1, 1),
-        dilation_rate=(1, 1),
-        padding="symmetric",  # same, valid, symetric, reflect
-        activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
-        normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-        l2_value=None,
-        **kwargs
-    ):
+            self,
+            num_out_filters,
+            kernel_size=(3, 3),
+            strides=(1, 1),
+            dilation_rate=(1, 1),
+            padding="symmetric",  # same, valid, symetric, reflect
+            activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+            normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
+            l2_value=None,
+            **kwargs):
 
         # assert padding: checked on StdCNA
         # assert activation: checked on StdCNA
@@ -70,9 +70,7 @@ class ResidualStdCNA(tf.keras.layers.Layer):
         # Si es necesario ajusto la cantidad de filtros finales para poder hacer el Residual ADD
         self.input_channels = input_shape[-1]
         if self.num_out_filters != self.input_channels:
-            self.f_conv2d_num_filters = Conv2D(
-                filters=self.num_out_filters, kernel_size=(1, 1)
-            )
+            self.f_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1))
 
     def call(self, X):
 

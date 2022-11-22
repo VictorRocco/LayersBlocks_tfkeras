@@ -14,27 +14,27 @@ TODO: add residual_add output_mode option
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import Add, AveragePooling2D, Concatenate, UpSampling2D
+from tensorflow.keras.layers import (Add, AveragePooling2D, Concatenate, UpSampling2D)
 
 from .StdCNA import StdCNA
 
 
 @tf.keras.utils.register_keras_serializable()
 class PPM(tf.keras.layers.Layer):
+
     def __init__(
-        self,
-        num_out_filters,
-        ppm_rates=[2, 4, 8],
-        kernel_size=(3, 3),
-        strides=(1, 1),
-        dilation_rate=(1, 1),
-        padding="symmetric",  # same, valid, symmetric, reflect
-        activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
-        normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-        output_mode="as_list",  # as_list / add / concatenate
-        l2_value=None,
-        **kwargs
-    ):
+            self,
+            num_out_filters,
+            ppm_rates=[2, 4, 8],
+            kernel_size=(3, 3),
+            strides=(1, 1),
+            dilation_rate=(1, 1),
+            padding="symmetric",  # same, valid, symmetric, reflect
+            activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+            normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
+            output_mode="as_list",  # as_list / add / concatenate
+            l2_value=None,
+            **kwargs):
 
         # assert padding: checked on StdCNA
         # assert activation: checked on StdCNA
@@ -70,9 +70,7 @@ class PPM(tf.keras.layers.Layer):
                 normalization=self.normalization,
                 l2_value=self.l2_value,
             )
-            self.f_upsample[rate] = UpSampling2D(
-                size=(rate, rate), interpolation="bilinear"
-            )
+            self.f_upsample[rate] = UpSampling2D(size=(rate, rate), interpolation="bilinear")
 
         if self.output_mode == "add":
             self.f_final_operation = Add()
@@ -81,11 +79,8 @@ class PPM(tf.keras.layers.Layer):
         elif self.output_mode == "as_list":
             self.f_final_operation = None
         else:
-            raise ValueError(
-                'output_mode should be "as_list", "add" or "concatenate", received: '
-                + str(self.output_mode)
-                + "."
-            )
+            raise ValueError('output_mode should be "as_list", "add" or "concatenate", received: ' +
+                             str(self.output_mode) + ".")
 
     def call(self, X):
 

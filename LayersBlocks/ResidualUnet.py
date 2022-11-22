@@ -27,7 +27,7 @@ Sources:
 """
 
 import tensorflow as tf
-from tensorflow.keras.layers import Add, Concatenate, Dropout, MaxPool2D, UpSampling2D
+from tensorflow.keras.layers import (Add, Concatenate, Dropout, MaxPool2D, UpSampling2D)
 
 from .CSE import CSE
 from .lbConv2D import lbConv2D
@@ -36,19 +36,19 @@ from .StdCNA import StdCNA
 
 @tf.keras.utils.register_keras_serializable()
 class ResidualUnet(tf.keras.layers.Layer):
+
     def __init__(
-        self,
-        num_out_filters,
-        num_unet_filters,
-        num_layers,  # read upper documentation (in order to calculate minimum bottleneck shape)
-        function="StdCNA",  # StdCNA (only one option at the moment)
-        aggregation="concatenate",  # concatenate / add
-        residual=True,  # True=std residual, False=not residual (like U2NET)
-        output_CSE=False,  # False / True
-        output_dropout=None,  # None or 0.xx
-        l2_value=None,
-        **kwargs
-    ):
+            self,
+            num_out_filters,
+            num_unet_filters,
+            num_layers,  # read upper documentation (in order to calculate minimum bottleneck shape)
+            function="StdCNA",  # StdCNA (only one option at the moment)
+            aggregation="concatenate",  # concatenate / add
+            residual=True,  # True=std residual, False=not residual (like U2NET)
+            output_CSE=False,  # False / True
+            output_dropout=None,  # None or 0.xx
+            l2_value=None,
+            **kwargs):
 
         if function not in ("StdCNA"):
             raise ValueError("invalid argument: function = ", function)
@@ -71,31 +71,23 @@ class ResidualUnet(tf.keras.layers.Layer):
         self.l2_value = l2_value
 
         # Residual Input
-        self.f_stdcna_in = StdCNA(
-            num_out_filters=self.num_out_filters, l2_value=self.l2_value
-        )
+        self.f_stdcna_in = StdCNA(num_out_filters=self.num_out_filters, l2_value=self.l2_value)
 
         # Encoder
         self.f_encoder_stdcna = {}
         self.skip_connection = {}
         self.f_maxpool = {}
         for num_layer in range(self.num_layers - 1):  # -1 = bottleneck
-            if (
-                num_layer == 0
-            ):  # la 1ra (de mas arriba) out_filters, el resto unet_filters
+            if (num_layer == 0):  # la 1ra (de mas arriba) out_filters, el resto unet_filters
                 filters = num_out_filters
             else:
                 filters = num_unet_filters
             # print("ResidualUnet Encoder (num_layer, filters):", num_layer, filters, flush=True)
-            self.f_encoder_stdcna[num_layer] = StdCNA(
-                num_out_filters=filters, l2_value=self.l2_value
-            )
+            self.f_encoder_stdcna[num_layer] = StdCNA(num_out_filters=filters, l2_value=self.l2_value)
             self.f_maxpool[num_layer] = MaxPool2D((2, 2))  # Downsampling
 
         # Bottleneck
-        self.f_bottleneck = StdCNA(
-            num_out_filters=num_unet_filters, l2_value=self.l2_value
-        )
+        self.f_bottleneck = StdCNA(num_out_filters=num_unet_filters, l2_value=self.l2_value)
         # print("ResidualUnet Bottleneck", flush=True)
         self.f_dilated_bottleneck = StdCNA(
             num_out_filters=num_unet_filters,
@@ -125,25 +117,19 @@ class ResidualUnet(tf.keras.layers.Layer):
             )
 
         for num_layer in reversed(range(self.num_layers - 1)):  # -1 = bottleneck
-            self.f_upsampling[num_layer] = UpSampling2D(
-                (2, 2), interpolation="bilinear"
-            )
+            self.f_upsampling[num_layer] = UpSampling2D((2, 2), interpolation="bilinear")
             if self.aggregation == "concatenate":
                 self.f_decoder_aggregation[num_layer] = Concatenate()
             elif self.aggregation == "add":
                 self.f_decoder_aggregation[num_layer] = Add()
             else:
                 assert "aggregation error"
-            if (
-                num_layer == 0
-            ):  # la 1ra (de mas arriba) out_filters, el resto unet_filters
+            if (num_layer == 0):  # la 1ra (de mas arriba) out_filters, el resto unet_filters
                 filters = num_out_filters
             else:
                 filters = num_unet_filters
             # print("ResidualUnet Decoder (num_layer, filters):", num_layer, filters, flush=True)
-            self.f_decoder_stdcna[num_layer] = StdCNA(
-                num_out_filters=filters, l2_value=self.l2_value
-            )
+            self.f_decoder_stdcna[num_layer] = StdCNA(num_out_filters=filters, l2_value=self.l2_value)
 
         # Output
         if self.residual is True:
@@ -184,27 +170,19 @@ class ResidualUnet(tf.keras.layers.Layer):
         # Bridge
         self.bottleneck_result = self.f_bottleneck(Y)
         self.dilated_bottleneck_result = self.f_dilated_bottleneck(Y)
-        Y = self.f_bottleneck_aggregation(
-            [self.bottleneck_result, self.dilated_bottleneck_result]
-        )
+        Y = self.f_bottleneck_aggregation([self.bottleneck_result, self.dilated_bottleneck_result])
 
         # Decoder
         for num_layer in reversed(range(self.num_layers - 1)):  # -1 = bottleneck
             Y = self.f_upsampling[num_layer](Y)
             # Ajusto filtros el Deconv Add de la capa de mas arriba
-            if (self.aggregation == "add") and (
-                Y.shape[-1] != self.skip_connection[num_layer].shape[-1]
-            ):
-                Y = self.f_decoder_aggregation[num_layer](
-                    [
-                        self.f_decoder_conv2d_num_filters(Y),
-                        self.skip_connection[num_layer],
-                    ]
-                )
+            if (self.aggregation == "add") and (Y.shape[-1] != self.skip_connection[num_layer].shape[-1]):
+                Y = self.f_decoder_aggregation[num_layer]([
+                    self.f_decoder_conv2d_num_filters(Y),
+                    self.skip_connection[num_layer],
+                ])
             else:
-                Y = self.f_decoder_aggregation[num_layer](
-                    [Y, self.skip_connection[num_layer]]
-                )
+                Y = self.f_decoder_aggregation[num_layer]([Y, self.skip_connection[num_layer]])
             Y = self.f_decoder_stdcna[num_layer](Y)
 
         # Output

@@ -17,19 +17,19 @@ from .StdCNA import StdCNA
 
 @tf.keras.utils.register_keras_serializable()
 class ASPP(tf.keras.layers.Layer):
+
     def __init__(
-        self,
-        num_out_filters,
-        aspp_rates=[2, 4, 8],
-        kernel_size=(3, 3),
-        strides=(1, 1),
-        padding="symmetric",  # same, valid, symmetric, reflect
-        activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
-        normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-        output_mode="as_list",  # as_list / residual_add / add / concatenate
-        l2_value=None,
-        **kwargs
-    ):
+            self,
+            num_out_filters,
+            aspp_rates=[2, 4, 8],
+            kernel_size=(3, 3),
+            strides=(1, 1),
+            padding="symmetric",  # same, valid, symmetric, reflect
+            activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+            normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
+            output_mode="as_list",  # as_list / residual_add / add / concatenate
+            l2_value=None,
+            **kwargs):
 
         # assert padding: checked on StdCNA
         # assert activation: checked on StdCNA
@@ -70,10 +70,8 @@ class ASPP(tf.keras.layers.Layer):
             self.f_final_operation = None
         else:
             raise ValueError(
-                'output_mode should be "as_list", "residual_add", "add" or "concatenate", received: '
-                + str(self.output_mode)
-                + "."
-            )
+                'output_mode should be "as_list", "residual_add", "add" or "concatenate", received: ' +
+                str(self.output_mode) + ".")
 
     def build(self, input_shape):
 
@@ -81,9 +79,7 @@ class ASPP(tf.keras.layers.Layer):
         # para poder hacer el Residual ADD (sin activacion)
         self.input_channels = input_shape[-1]
         if self.num_out_filters != self.input_channels:
-            self.f_output_conv2d_num_filters = Conv2D(
-                filters=self.num_out_filters, kernel_size=(1, 1)
-            )
+            self.f_output_conv2d_num_filters = Conv2D(filters=self.num_out_filters, kernel_size=(1, 1))
 
     def call(self, X):
 

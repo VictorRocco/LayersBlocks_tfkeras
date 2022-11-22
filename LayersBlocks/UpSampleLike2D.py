@@ -13,9 +13,8 @@ from tensorflow.keras.layers import UpSampling2D
 
 @tf.keras.utils.register_keras_serializable()
 class UpSampleLike2D(tf.keras.layers.Layer):
-    def __init__(
-        self, target_spatial_size=(256, 256), interpolation="bilinear", **kwargs
-    ):
+
+    def __init__(self, target_spatial_size=(256, 256), interpolation="bilinear", **kwargs):
         self.target_spatial_size = target_spatial_size
         self.interpolation = interpolation
         super().__init__(**kwargs)
@@ -31,13 +30,9 @@ class UpSampleLike2D(tf.keras.layers.Layer):
         _upsampling_factor_W = self.target_spatial_size[1] / self._input_W
 
         if _upsampling_factor_H.is_integer() is False:
-            raise ValueError(
-                "upsampling factor H is not integer:", _upsampling_factor_H
-            )
+            raise ValueError("upsampling factor H is not integer:", _upsampling_factor_H)
         if _upsampling_factor_W.is_integer() is False:
-            raise ValueError(
-                "upsampling factor W is not integer:", _upsampling_factor_W
-            )
+            raise ValueError("upsampling factor W is not integer:", _upsampling_factor_W)
 
         Y = X
         if _upsampling_factor_H != 1.0 or _upsampling_factor_W != 1.0:

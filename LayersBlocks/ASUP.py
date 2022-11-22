@@ -16,18 +16,18 @@ from .StdCNA import StdCNA
 
 @tf.keras.utils.register_keras_serializable()
 class ASUP(tf.keras.layers.Layer):
+
     def __init__(
-        self,
-        num_out_filters,
-        asup_rates=[1, 2, 4, 8],
-        kernel_size=(3, 3),
-        strides=(1, 1),
-        padding="symmetric",  # same, valid, symmetric, reflect
-        activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
-        normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
-        l2_value=None,
-        **kwargs
-    ):
+            self,
+            num_out_filters,
+            asup_rates=[1, 2, 4, 8],
+            kernel_size=(3, 3),
+            strides=(1, 1),
+            padding="symmetric",  # same, valid, symmetric, reflect
+            activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+            normalization="IN",  # IN=InstanceNormalization, BN=BatchNormalization, None
+            l2_value=None,
+            **kwargs):
 
         # assert padding: checked on StdCNA
         # assert activation: checked on StdCNA

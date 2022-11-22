@@ -23,14 +23,14 @@ from .lbConv2D import lbConv2D
 
 @tf.keras.utils.register_keras_serializable()
 class CSE(tf.keras.layers.Layer):
+
     def __init__(
-        self,
-        activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
-        num_out_filters=None,  # None, num_out_filters
-        l2_value=None,
-        ratio=16,
-        **kwargs
-    ):
+            self,
+            activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+            num_out_filters=None,  # None, num_out_filters
+            l2_value=None,
+            ratio=16,
+            **kwargs):
 
         # assert activation: checked on Activation
 
@@ -68,9 +68,7 @@ class CSE(tf.keras.layers.Layer):
             bias_regularizer=l2(self.l2_value),
         )
 
-        if (self.num_out_filters is not None) and (
-            self.num_out_filters != self.input_channels
-        ):
+        if (self.num_out_filters is not None) and (self.num_out_filters != self.input_channels):
             self.f_matching_num_filters = lbConv2D(
                 num_out_filters=self.num_out_filters,
                 kernel_size=(1, 1),
@@ -90,9 +88,7 @@ class CSE(tf.keras.layers.Layer):
         Y = self.f_multiply([X, Y])
 
         # Matching filters
-        if (self.num_out_filters is not None) and (
-            self.num_out_filters != self.input_channels
-        ):
+        if (self.num_out_filters is not None) and (self.num_out_filters != self.input_channels):
             Y = self.f_matching_num_filters(Y)
 
         return Y

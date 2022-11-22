@@ -22,17 +22,17 @@ from .Activation import Activation
 
 @tf.keras.utils.register_keras_serializable()
 class lbConv2D(tf.keras.layers.Layer):
+
     def __init__(
-        self,
-        num_out_filters,
-        kernel_size=(3, 3),
-        strides=(1, 1),
-        dilation_rate=(1, 1),
-        padding="symmetric",  # same, valid, symmetric, reflect
-        activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
-        l2_value=None,
-        **kwargs
-    ):
+            self,
+            num_out_filters,
+            kernel_size=(3, 3),
+            strides=(1, 1),
+            dilation_rate=(1, 1),
+            padding="symmetric",  # same, valid, symmetric, reflect
+            activation="LR010",  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+            l2_value=None,
+            **kwargs):
 
         if padding not in ("same", "valid", "symmetric", "reflect"):
             raise ValueError("invalid argument: padding = ", padding)
@@ -84,41 +84,29 @@ class lbConv2D(tf.keras.layers.Layer):
                 pad_along_height = 0
             elif input_h % stride_h == 0:
                 # pad_along_height = tf.math.maximum((kernel_h - stride_h), 0) #original
-                pad_along_height = tf.math.maximum(
-                    (kernel_h - stride_h), 2 * dilation_h
-                )  # VNR
+                pad_along_height = tf.math.maximum((kernel_h - stride_h), 2 * dilation_h)  # VNR
             else:
                 # pad_along_height = tf.math.maximum(kernel_h - (input_h % stride_h), 0) #original
-                pad_along_height = tf.math.maximum(
-                    kernel_h - (input_h % stride_h), 2 * dilation_h
-                )  # VNR
+                pad_along_height = tf.math.maximum(kernel_h - (input_h % stride_h), 2 * dilation_h)  # VNR
             if kernel_w == 1 and stride_w == 1 and dilation_w == 1:
                 pad_along_width = 0
             elif input_w % stride_w == 0:
                 # pad_along_width = tf.math.maximum((kernel_w - stride_w), 0) #original
-                pad_along_width = tf.math.maximum(
-                    (kernel_w - stride_w), 2 * dilation_w
-                )  # VNR
+                pad_along_width = tf.math.maximum((kernel_w - stride_w), 2 * dilation_w)  # VNR
             else:
-                pad_along_width = tf.math.maximum(
-                    kernel_w - (input_w % stride_w), 0
-                )  # original
+                pad_along_width = tf.math.maximum(kernel_w - (input_w % stride_w), 0)  # original
                 # pad_along_width =
                 #     tf.math.maximum(kernel_w - (input_w % stride_w), 2 * dilation_w) #VNR
 
             pad_top = int(pad_along_height // 2)  # amount padding on the top
             pad_bottom = int(pad_along_height - pad_top)  # amount padding on the bottom
             pad_left = int(pad_along_width // 2)  # amount of padding on the left
-            pad_right = int(
-                pad_along_width - pad_left
-            )  # amount of padding on the right
+            pad_right = int(pad_along_width - pad_left)  # amount of padding on the right
 
             # print("pad_top", pad_top, "pad_bottom", pad_bottom,
             # "pad_left", pad_left, "pad_right", pad_right)
 
-            self.tfpad_paddings = tf.constant(
-                [[0, 0], [pad_top, pad_bottom], [pad_left, pad_right], [0, 0]]
-            )
+            self.tfpad_paddings = tf.constant([[0, 0], [pad_top, pad_bottom], [pad_left, pad_right], [0, 0]])
             self.f_conv2d = Conv2D(
                 filters=self.num_out_filters,
                 kernel_size=self.kernel_size,

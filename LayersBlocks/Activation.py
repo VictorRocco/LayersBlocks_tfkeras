@@ -10,8 +10,11 @@ from tensorflow.keras.layers import LeakyReLU, ReLU
 
 @tf.keras.utils.register_keras_serializable()
 class Activation(tf.keras.layers.Layer):
+
     def __init__(
-        self, activation="LR010", **kwargs  # LR010=LeakyReLU(0.10), RELU=ReLU, None
+            self,
+            activation="LR010",
+            **kwargs  # LR010=LeakyReLU(0.10), RELU=ReLU, None
     ):
 
         if activation not in ("LR010", "RELU", None):

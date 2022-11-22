@@ -20,6 +20,7 @@ from tensorflow.keras.regularizers import l2
 
 @tf.keras.utils.register_keras_serializable()
 class SSE(tf.keras.layers.Layer):
+
     def __init__(self, l2_value=None, **kwargs):
 
         super().__init__(**kwargs)
